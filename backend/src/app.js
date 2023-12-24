@@ -25,5 +25,8 @@ app.get('/', (req, res) => {
         .json(new ApiResponse(200, "OK"));
 })
 
+import { router } from "./routes/user.routes.js";
+
+app.use("/api/v1/users", router);
 
 export { app };

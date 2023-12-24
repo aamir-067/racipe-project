@@ -7,7 +7,7 @@ export const asyncHandler = async (fn) => {
         throw new ApiError(
             500,
             error?.massage || "Something went wrong",
-            err.errors || []
+            error.errors || []
         );
     }
 }
