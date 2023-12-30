@@ -4,12 +4,11 @@ import { registerUser } from "../controllers/user.controller.js";
 
 
 const router = new Router();
-router.route("/register").post(upload.fields([
-    {
-        name: "avatar",
-        maxCount: 1
-    }
-]), registerUser);
+
+
+router.route("/register").post(
+    upload.single("avatar"),
+    registerUser);
 
 
 export { router };

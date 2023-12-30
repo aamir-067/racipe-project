@@ -32,18 +32,6 @@ const UserSchema = new Schema({
         type: String,
         default: "",
     },
-    recipes: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Recipe"
-        }
-    ],
-    wishlist: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Recipe"
-        }
-    ],
     refreshToken: {
         type: String
     }
