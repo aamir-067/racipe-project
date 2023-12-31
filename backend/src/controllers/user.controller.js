@@ -3,6 +3,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { uploadToCloudinary } from "../utils/cloudinary.js";
+
 export const registerUser = asyncHandler(async (req, res) => {
 
     const { fullName, username, email, password } = req.body;
@@ -27,17 +28,11 @@ export const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(409, "user already exists");
     }
 
-    // get and post the avatar.
+    // get and post the avatar. its optional
     const avatarImage = req?.file;
-
-    if (!avatarImage) {
-        throw new ApiError(401, "avatar image is missing");
-    }
-
-    const avatar = await uploadToCloudinary(avatarImage);
-
-    if (!avatar) {
-        throw new ApiError(400, "Avatar is not uploaded to cloudinary try again");
+    let avatar;
+    if (avatarImage) {
+        avatar = await uploadToCloudinary(avatarImage);
     }
 
     // create a new user.
@@ -46,7 +41,7 @@ export const registerUser = asyncHandler(async (req, res) => {
         email,
         password,
         fullName,
-        avatar: avatar.url
+        avatar: avatar.url || ""
     })
 
     const newUser = await User.findById(user._id).select("-password -refreshToken");
