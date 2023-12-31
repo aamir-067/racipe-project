@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { verifyToken } from "../middlewares/checkLogin.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
-import { uploadRecipe } from "../controllers/recipe.controller.js";
+import { addToWishlist, uploadRecipe } from "../controllers/recipe.controller.js";
 const router = new Router();
 
 
@@ -13,6 +13,8 @@ router.route("/upload").post(
     verifyToken,
     uploadRecipe
 )
+
+router.route("/add-to-wishlist").post(verifyToken, addToWishlist);
 
 
 
