@@ -25,8 +25,11 @@ app.get('/', (req, res) => {
         .json(new ApiResponse(200, "OK"));
 })
 
-import { router } from "./routes/user.routes.js";
+import { router as userRouter } from "./routes/user.routes.js";
+app.use("/api/v1/users", userRouter);
 
-app.use("/api/v1/users", router);
+
+import { router as recipeRouter } from "./routes/recipe.routes.js";
+app.use("/api/v1/recipes", recipeRouter);
 
 export { app };
