@@ -2,7 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
-import { uploadToCloudinary } from "../utils/cloudinary.js";
+import { deleteFromCloudinary, uploadToCloudinary } from "../utils/cloudinary.js";
 
 const generateAccessTokens = async (userId) => {
     try {
@@ -144,3 +144,111 @@ export const logOutUser = asyncHandler(async (req, res) => {
             new ApiResponse(200, "user Logged out", { user })
         );
 })
+
+export const refreshAccessToken = asyncHandler(async (req, res) => {
+    // get the loggedIn user.
+    // regenerate the tokens 
+    // send back the ne tokens.
+
+    const { _id } = req.user;
+
+    // regenerate tokens.
+    const { accessToken, refreshToken } = await generateAccessTokens(_id);
+    // get the user with latest refresh token.
+    const user = await User.findById(_id).select("-password");
+
+    // send the user details and tokens.
+    return res.status(200)
+        .json(
+            new ApiResponse(200, "tokens refreshed",
+                {
+                    user,
+                    refreshToken,
+                    accessToken
+                })
+        )
+
+});
+
+
+// ? To edit the details of the user.
+
+export const changeUserPassword = asyncHandler(async (req, res) => {
+    // get the new password.
+    // change the password 
+    // send response
+
+    const { newPassword, currentPassword } = req.body;
+
+    const user = await User.findById(req.user._id);
+
+    const isCorrect = user.isPasswordCorrect(currentPassword);
+
+    if (!isCorrect) {
+        throw new ApiError(402, "Incorrect current password");
+    }
+
+    user.password = newPassword;
+
+    await user.save({ validateBeforeSave: false });
+
+    return res.status(200)
+        .json(
+            new ApiResponse(200, "password changed successfully")
+        )
+});
+
+export const changeUserFullName = asyncHandler(async (req, res) => {
+    const { fullName } = req.body;
+
+    const user = await User.findByIdAndUpdate(req.user._id,
+        {
+            fullName
+        },
+        {
+            new: true
+        });
+
+    if (!user) {
+        throw new ApiError(502, "Error while updating fullName");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, "fullName changed successfully", { user })
+    )
+});
+
+
+export const changeUserAvatar = asyncHandler(async (req, res) => {
+
+    const avatarImage = req.file;
+    if (!avatarImage) {
+        throw new ApiError(401, "avatar not found");
+    }
+
+    const avatar = await uploadToCloudinary(avatarImage);
+
+    if (!avatar) {
+        throw new ApiError(402, "Error while uploading avatar");
+    }
+
+    await deleteFromCloudinary(req.user.avatar);
+
+    const user = await User.findByIdAndUpdate(req.user._id,
+        {
+            avatar: avatar.url || ""
+        },
+        {
+            new: true
+        }
+    );
+
+
+    return res.status(200).json(
+        new ApiResponse(200, "avatar updated successfully", { user })
+    )
+});
+
+
+
+
