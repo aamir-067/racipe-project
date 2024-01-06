@@ -107,3 +107,51 @@ export const addToWishlist = asyncHandler(async (req, res) => {
 });
 
 
+
+export const deleteUploadedRecipe = asyncHandler(async (req, res) => {
+    const { _id } = req?.user;
+    const { recipeId } = req.body;
+
+    if (!recipeId) {
+        throw new Error("Invalid Recipe ID");
+    }
+
+    if (!_id) {
+        throw new ApiError(401, "User is not logged in");
+    }
+    const recipe = await Recipe.findById(recipeId);
+
+    if (!recipe) {
+        throw new ApiError(401, "Recipe not found");
+    }
+
+    if (recipe?.owner.toString() !== _id.toString()) {
+        throw new ApiError(401, "you are not the recipe owner");
+    }
+
+
+    const deletedRecipe = await Recipe.findByIdAndDelete(recipeId);
+
+    return res.status(200).json(
+        new ApiResponse(200, "Recipe deleted successfully", { deletedRecipe })
+    );
+
+});
+
+
+export const UserUploadedRecipes = asyncHandler(async (req, res) => {
+    const { _id } = req?.user?._id;
+
+    if (!_id) {
+        throw new ApiError(401, "User is not logged in");
+    }
+
+    const allRecipes = await Recipe.find({
+        owner: _id
+    });
+
+    return res.status(200).json(
+        new ApiResponse(200, "recipes fetched successfully", { allRecipes })
+    )
+});
+
