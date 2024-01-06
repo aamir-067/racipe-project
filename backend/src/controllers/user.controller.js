@@ -1,6 +1,8 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
+import { Recipe } from "../models/recipe.model.js";
+import { Wishlist } from "../models/wishlist.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { deleteFromCloudinary, uploadToCloudinary } from "../utils/cloudinary.js";
 
@@ -248,6 +250,47 @@ export const changeUserAvatar = asyncHandler(async (req, res) => {
     )
 });
 
+
+// ! danger
+
+export const deleteUserAccount = asyncHandler(async (req, res) => {
+    const { _id } = req?.user;
+
+    if (_id) {
+        throw new ApiError(401, "Login First");
+    }
+
+    const userToDelete = await User.findById(_id);
+
+    if (!userToDelete) {
+        throw new ApiError(404, "User not found");
+    }
+
+    // delete all the recipes  he uploaded.
+    // delete all its wishlists.
+
+    await Recipe.deleteMany({
+        owner: _id.toString()
+    });
+
+    await Wishlist.deleteMany({
+        user: _id.toString()
+    });
+
+    // delete the account and reset the cookies.
+
+    const deletedUser = await User.findByIdAndDelete(_id).select("-password -refreshToken");
+    // delete the avatar image from cloudinary.
+    await deleteFromCloudinary(deletedUser?.avatar || "");
+
+    return res
+        .status(200)
+        .clearCookie("refreshToken", { httpOnly: true, secure: true })
+        .clearCookie("accessToken", { httpOnly: true, secure: true })
+        .json(
+            new ApiResponse(200, "user account deleted successfully", { deletedUser })
+        )
+})
 
 
 

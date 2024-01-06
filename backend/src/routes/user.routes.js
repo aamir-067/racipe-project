@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { upload } from "../middlewares/multer.middleware.js";
-import { changeUserAvatar, changeUserFullName, changeUserPassword, logOutUser, loginUser, refreshAccessToken, registerUser } from "../controllers/user.controller.js";
+import { changeUserAvatar, changeUserFullName, changeUserPassword, deleteUserAccount, logOutUser, loginUser, refreshAccessToken, registerUser } from "../controllers/user.controller.js";
 import { verifyToken } from "../middlewares/checkLogin.middleware.js";
 
 
@@ -23,5 +23,7 @@ router.route("/change-fullName").post(verifyToken, changeUserFullName);
 router.route("/change-password").post(verifyToken, changeUserPassword);
 router.route("/change-avatar").post(verifyToken, upload.single("avatar"), changeUserAvatar);
 
+// ! danger zone
+router.route("/delete-account").delete(verifyToken, deleteUserAccount);
 
 export { router };
