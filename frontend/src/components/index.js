@@ -1,5 +1,1 @@
-import EditProfile from "./Edit Profile/EditProfile";
-
-export {
-    EditProfile
-}
+// import each component here and then export it.
