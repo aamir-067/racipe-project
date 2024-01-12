@@ -162,11 +162,11 @@ export const getAllRecipesOrderByWishlists = asyncHandler(async (req, res) => {
     // set the ascending ad descending flag accordingly.
     // return the result.
 
-    const { ascending } = req?.params;
+    const { order } = req?.params;
     let asc;
-    if (ascending === "ascending") {
+    if (order === "ascending") {
         asc = 1;
-    } else if (ascending === "descending") {
+    } else if (order === "descending") {
         asc = -1;
     } else {
         throw new ApiError(403, "Route not found");
@@ -176,6 +176,36 @@ export const getAllRecipesOrderByWishlists = asyncHandler(async (req, res) => {
     const allRecipes = await Recipe.aggregate([{
         $sort: {
             "wishlistsCount": asc
+        }
+    }]);
+
+
+    return res.status(200).json(
+        new ApiResponse(200, "recipes fetched successfully", { allRecipes })
+    )
+});
+
+export const getAllRecipesOrderByName = asyncHandler(async (req, res) => {
+    // get the asc , desc flag.
+    // get all the recipes.
+    // sort it by wishlists count.
+    // set the ascending ad descending flag accordingly.
+    // return the result.
+
+    const { order } = req?.params;
+    let asc;
+    if (order === "ascending") {
+        asc = 1;
+    } else if (order === "descending") {
+        asc = -1;
+    } else {
+        throw new ApiError(403, "Route not found");
+    }
+
+
+    const allRecipes = await Recipe.aggregate([{
+        $sort: {
+            "name": asc
         }
     }]);
 
