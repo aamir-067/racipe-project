@@ -107,7 +107,6 @@ export const addToWishlist = asyncHandler(async (req, res) => {
 });
 
 
-
 export const deleteUploadedRecipe = asyncHandler(async (req, res) => {
     const { _id } = req?.user;
     const { recipeId } = req.body;
@@ -149,6 +148,37 @@ export const UserUploadedRecipes = asyncHandler(async (req, res) => {
     const allRecipes = await Recipe.find({
         owner: _id
     });
+
+    return res.status(200).json(
+        new ApiResponse(200, "recipes fetched successfully", { allRecipes })
+    )
+});
+
+
+export const getAllRecipesOrderByWishlists = asyncHandler(async (req, res) => {
+    // get the asc , desc flag.
+    // get all the recipes.
+    // sort it by wishlists count. 
+    // set the ascending ad descending flag accordingly.
+    // return the result.
+
+    const { ascending } = req?.params;
+    let asc;
+    if (ascending === "ascending") {
+        asc = 1;
+    } else if (ascending === "descending") {
+        asc = -1;
+    } else {
+        throw new ApiError(403, "Route not found");
+    }
+
+
+    const allRecipes = await Recipe.aggregate([{
+        $sort: {
+            "wishlistsCount": asc
+        }
+    }]);
+
 
     return res.status(200).json(
         new ApiResponse(200, "recipes fetched successfully", { allRecipes })

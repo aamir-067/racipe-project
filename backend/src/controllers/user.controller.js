@@ -256,7 +256,7 @@ export const changeUserAvatar = asyncHandler(async (req, res) => {
 export const deleteUserAccount = asyncHandler(async (req, res) => {
     const { _id } = req?.user;
 
-    if (_id) {
+    if (!_id) {
         throw new ApiError(401, "Login First");
     }
 
@@ -291,6 +291,10 @@ export const deleteUserAccount = asyncHandler(async (req, res) => {
             new ApiResponse(200, "user account deleted successfully", { deletedUser })
         )
 })
+
+
+
+//TODO : get the User Account. 
 
 
 
