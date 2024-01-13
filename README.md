@@ -55,29 +55,54 @@ git clone <repository_url>
 2. Navigate to the project directory:
 
 ```bash
-cd Recipe-Manager
+cd recipe-project
 ```
 
-3. Install dependencies:
+3. install dependencies:
 
-```bash
-npm install
-```
+    - install backend dependencies.
+
+    ```bash
+        cd backend
+        npm install
+    ```
+
+    - install frontend dependencies.
+
+    ```bash
+        cd ../frontend
+        npm install
+    ```
 
 ## Usage 📋
 
 ## Development: 🛠️
 
-Run the frontend development server:
+1. Run the server:
 
 ```bash
-npm start
+cd backend
+npm run start
+```
+
+2. Run the frontend:
+
+```bash
+    cd frontend
+    npm run dev
 ```
 
 start the backend server concurrently.
-Production:
-Build the production-ready frontend: npm run build
-Contributing
+
+## Production 💻 :
+
+Build the production-ready frontend:
+
+```bash
+ npm run build
+```
+
+## Contributing
 
 `Contributions are welcome! 👋🏻`
 
