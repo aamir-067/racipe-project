@@ -338,4 +338,29 @@ export const editRecipeDescription = asyncHandler(async (req, res) => {
         new ApiResponse(200, "description updated successfully")
     );
 })
+export const editRecipeIngredients = asyncHandler(async (req, res) => {
+    const { recipeId } = req.params;
+    let ingredients = req.body;
+
+    if (!(recipeId && ingredients)) {
+        throw new ApiError(401, "recipe id or ingredients is missing");
+    }
+
+    ingredients = ingredients.split(",").trim();
+
+    // check if the caller is owner and the recipe is available.
+
+    const recipe = await Recipe.findById(mongoose.Types.ObjectId(recipeId));
+    if (!(recipe && (recipe.owner === req.user._id))) {
+        throw new ApiError(404, "unauthorized request recipe not found");
+    }
+
+    // update the ingredients and send the response.
+    recipe.ingredients = ingredients;
+    await recipe.save({ validateBeforeSave: false });
+
+    return res.status(200).json(
+        new ApiResponse(200, "recipe ingredients updated successfully")
+    );
+})
 
