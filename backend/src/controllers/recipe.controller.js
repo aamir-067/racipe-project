@@ -1,9 +1,10 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
-import { uploadToCloudinary } from "../utils/cloudinary.js";
+import { deleteFromCloudinary, uploadToCloudinary } from "../utils/cloudinary.js";
 import { Recipe } from "../models/recipe.model.js";
 import { Wishlist } from "../models/wishlist.model.js";
+import mongoose from "mongoose";
 
 
 export const uploadRecipe = asyncHandler(async (req, res) => {
@@ -77,7 +78,7 @@ export const addToWishlist = asyncHandler(async (req, res) => {
 
 
     // check if its already in wishlist or not.
-    const isWishListed = await Wishlist.find({
+    const isWishListed = await Wishlist.findOne({
         $and: [{ user: req.user._id }, { recipe: recipe._id }]
     })
 
@@ -236,4 +237,105 @@ export const getAllRecipesOrderByDate = asyncHandler(async (req, res) => {
         new ApiResponse(200, "recipes fetched successfully", { allRecipes })
     )
 });
+
+
+// ? editing the recipe.
+
+export const editRecipeName = asyncHandler(async (req, res) => {
+    const { recipeId } = req.params;
+    const { name } = req.body;
+    if (!(name?.trim() && recipeId?.trim())) {
+        throw new ApiError(401, "name not found");
+    }
+
+    const recipe = await Recipe.findById(mongoose.Types.ObjectId(recipeId));
+    if (!recipe) {
+        throw new ApiError(401, "recipe not found");
+    }
+
+    // check if the person is the owner of the recipe
+    const owner = req.user?._id;
+    if (recipe.owner !== owner) {
+        console.log("recipe owner === requester", recipe.owner, owner);
+        throw new ApiError(401, "Un Authorized request");
+    }
+
+    const newRecipe = await Recipe.findByIdAndUpdate(mongoose.Types.ObjectId(recipeId),
+        {
+            name
+        },
+        {
+            new: true
+        }
+    );
+
+    return res.status(200).json(
+        new ApiResponse(200, "recipe name updated successfully", { newRecipe })
+    )
+});
+
+export const editRecipeCoverImage = asyncHandler(async (req, res) => {
+    const coverImage = req.file;
+    const { recipeId } = req.params;
+
+    if (!(coverImage && recipeId)) {
+        throw new ApiError(401, "coverImage not found");
+    }
+
+    // get the recipe,
+    const recipe = await Recipe.findById(mongoose.Types.ObjectId(recipeId));
+
+    if (!recipe) {
+        throw new ApiError(401, "recipe not found");
+    }
+
+    // check if the person is the owner.
+    const owner = req.user?._id;
+    if (recipe.owner !== owner) {
+        console.log("recipe owner === requester", recipe.owner, owner);
+        throw new ApiError(401, "Un Authorized request");
+    }
+
+    // delete the prev image.
+    recipe.coverImage && await deleteFromCloudinary(recipe.coverImage);
+
+
+    // update the new image.
+
+    const newRecipe = await Recipe.findByIdAndUpdate(mongoose.Types.ObjectId(recipeId),
+        {
+            coverImage
+        },
+        {
+            new: true
+        }
+    );
+    // send the response
+    return res.status(200).json(
+        new ApiResponse(200, "recipe coverImage updated successfully", { newRecipe })
+    )
+});
+
+export const editRecipeDescription = asyncHandler(async (req, res) => {
+    const { recipeId } = req.params;
+    const description = req.body;
+
+    if (!(recipeId && description)) {
+        throw new ApiError(401, "recipe id or description is missing");
+    }
+    // check if the caller is owner and the recipe is available.
+
+    const recipe = await Recipe.findById(mongoose.Types.ObjectId(recipeId));
+    if (!(recipe && (recipe.owner === req.user._id))) {
+        throw new ApiError(404, "unauthorized request recipe not found");
+    }
+
+    // update the description and send the response.
+    recipe.description = description;
+    await recipe.save({ validateBeforeSave: false });
+
+    return res.status(200).json(
+        new ApiResponse(200, "description updated successfully")
+    );
+})
 
