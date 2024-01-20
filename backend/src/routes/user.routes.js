@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { upload } from "../middlewares/multer.middleware.js";
-import { changeUserAvatar, changeUserFullName, changeUserPassword, deleteUserAccount, logOutUser, loginUser, refreshAccessToken, registerUser } from "../controllers/user.controller.js";
+import { changeUserAvatar, changeUserFullName, changeUserPassword, deleteUserAccount, getUserAccountDetails, logOutUser, loginUser, refreshAccessToken, registerUser } from "../controllers/user.controller.js";
 import { verifyToken } from "../middlewares/checkLogin.middleware.js";
 
 
@@ -12,6 +12,11 @@ router.route("/register").post(
     registerUser);
 
 router.route("/login").post(loginUser);
+
+
+
+// ? get user account
+router.route("/p/:username").get(getUserAccountDetails);
 
 // protected routes
 

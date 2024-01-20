@@ -294,7 +294,50 @@ export const deleteUserAccount = asyncHandler(async (req, res) => {
 
 
 
-//TODO : get the User Account. 
+
+// name, email, avatar, uploadedRecipes, wishlists.
+export const getUserAccountDetails = asyncHandler(async (req, res) => {
+    const { username } = req.params;
+    console.log(username);
+    const account = await User.aggregate([
+        {
+            $match: {
+                "username": username
+            }
+        }, {
+            $lookup: {
+                from: "recipes",
+                foreignField: "owner",
+                localField: "_id",
+                as: "uploadedRecipes"
+            }
+        }, {
+            $lookup: {
+                from: "wishlist",
+                foreignField: "user",
+                localField: "_id",
+                as: "wishlistRecipes"
+            }
+        }, {
+            $project: {
+                uploadedRecipes: 1,
+                wishlistRecipes: 1,
+                fullName: 1,
+                username: 1,
+                email: 1,
+                avatar: 1,
+            }
+        }
+    ]);
+
+    if (!account.length) {
+        throw new ApiError(404, "account not found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, "account fetched", { account: account[0] })
+    )
+})
 
 
 
