@@ -1,3 +1,8 @@
+/*
+
+Same like the edit Recipe.
+ */
+
 import React from 'react'
 
 const EditRecipe = () => {

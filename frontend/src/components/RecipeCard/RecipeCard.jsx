@@ -1,5 +1,13 @@
+<<<<<<< Updated upstream
 import React, { useState } from 'react';
 import { Dropzone, FileMosaic } from "@dropzone-ui/react";
+=======
+/**
+ * this card will represent each recipe on the AllRecipe component.
+ * and this will be clickable sso that you can see the full details of the recipe in the other component.
+ */
+import React from 'react'
+>>>>>>> Stashed changes
 
 const RecipeCard = () => {
     const [file, setFile] = useState([]);
