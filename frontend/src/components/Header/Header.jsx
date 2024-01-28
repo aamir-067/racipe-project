@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
+import { RecipeCard } from "../../components/index.js"
 import img1 from "../../assets/img1.jpg"
 
 const Header = () => {
@@ -21,49 +22,15 @@ const Header = () => {
 
                 {/* Top recipes section */}
                 <div className='mt-4 px-4 lg:px-8'>
-                    <div className='flex relative'>
+                    <div className='flex'>
                         <label className='text-2xl lg:text-4xl font-myBold7 '>Top Recipes</label>
                     </div>
-                    <div className='grid grid-cols-1 mx-auto my-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-96 md:w-full lg:w-full'> {/* Add gap between recipe cards */}
-                        <div className='flex flex-col mx-auto my-2 bg-black text-white rounded w-48 h-60 md:w-44 lg:w-44 md:h-56 lg:h-56 shadow-black shadow-lg overflow-hidden'>
-                            <img src={img1} alt="Recipe images" className='w-full h-32 transform transition-transform hover:scale-110' />
-                            <p className='text-sm max-w-xs truncate p-1'>
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat facilis eum possimus itaque amet fugiat totam cumque unde architecto provident! Tenetur officiis veniam placeat obcaecati ratione temporibus voluptates dolorum quasi?
-                            </p>
-                            <div className='flex items-center justify-start p-2 mt-4'>
-                                <img src={img1} alt="profile image" className='w-8 h-8 rounded-full' />
-                                <div className='flex flex-col mx-1'>
-                                    <label className='text-sm font-bold'> Safeer khan </label>
-                                    <label className='text-blue-500 text-xs'> @Safeerkhan</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='flex flex-col mx-auto my-2 bg-black text-white rounded w-48 h-60 md:w-44 lg:w-44 md:h-56 lg:h-56 shadow-black shadow-lg overflow-hidden'>
-                            <img src={img1} alt="Recipe images" className='w-full h-32 transform transition-transform hover:scale-110' />
-                            <p className='text-sm max-w-xs truncate p-1'>
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat facilis eum possimus itaque amet fugiat totam cumque unde architecto provident! Tenetur officiis veniam placeat obcaecati ratione temporibus voluptates dolorum quasi?
-                            </p>
-                            <div className='flex items-center justify-start p-2 mt-4'>
-                                <img src={img1} alt="profile image" className='w-8 h-8 rounded-full' />
-                                <div className='flex flex-col mx-1'>
-                                    <label className='text-sm font-bold'> Safeer khan </label>
-                                    <label className='text-blue-500 text-xs'> @Safeerkhan</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='flex flex-col mx-auto my-2 bg-black text-white rounded w-48 h-60 md:w-44 lg:w-44 md:h-56 lg:h-56 shadow-black shadow-lg overflow-hidden'>
-                            <img src={img1} alt="Recipe images" className='w-full h-32 transform transition-transform hover:scale-110' />
-                            <p className='text-sm max-w-xs truncate p-1'>
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat facilis eum possimus itaque amet fugiat totam cumque unde architecto provident! Tenetur officiis veniam placeat obcaecati ratione temporibus voluptates dolorum quasi?
-                            </p>
-                            <div className='flex items-center justify-start p-2 mt-4'>
-                                <img src={img1} alt="profile image" className='w-8 h-8 rounded-full' />
-                                <div className='flex flex-col mx-1'>
-                                    <label className='text-sm font-bold'> Safeer khan </label>
-                                    <label className='text-blue-500 text-xs'> @Safeerkhan</label>
-                                </div>
-                            </div>
-                        </div>
+                    <div className='w-full h-1/3 gap-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 '>
+                        <RecipeCard />
+                        <RecipeCard />
+                        <RecipeCard />
+                        <RecipeCard />
+                        <RecipeCard />
                     </div>
                 </div >
             </div >

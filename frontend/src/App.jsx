@@ -1,11 +1,16 @@
 import React from "react"
-import {Header, RecipeCard} from "./components/index"
-const App = ()=> {
+import { Header, ProfilePreview, EditProfile, UserAuth, Registration, Login, AllRecipes } from "./components/index"
+const App = () => {
 
     return (
         <>
-        {/* <Header /> */}
-        <RecipeCard />
+            {/* <Header /> */}
+            {/* < ProfilePreview /> */}
+            {/* <EditProfile /> */}
+            {/* <UserAuth /> */}
+            {/* <Registration /> */}
+            {/* <Login /> */}
+            {/* <AllRecipes /> */}
         </>
     )
 }

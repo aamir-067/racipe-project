@@ -1,53 +1,49 @@
 import React, { useState } from 'react';
-import { Dropzone, FileMosaic } from "@dropzone-ui/react";
+import { MdFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
+import img1 from "../../assets/img1.jpg"
 
 const RecipeCard = () => {
-    const [file, setFile] = useState([]);
+    const [favorite, setFavorite] = useState(false)
 
-    const updateFiles = (incomingFile) => {
-        setFile(incomingFile);
+    const toggleFavorite = () => {
+        setFavorite(!favorite)
     }
-
     return (
-        <div className='flex flex-col -pt-5 md:pt-8 lg:pt-10 md:flex-row lg:flex-row px-2 lg:px-9 md:w-full lg:w-full h-screen gap-2 md:gap-0 lg:gap-2 overflow-hidden bg-slate-300'>
+        <>
+            <div className=' relative w-96 md:w-full lg:w-full h-full grid grid-cols-1 mx-auto my-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 '>
 
-            {/* image selector */}
-            <Dropzone
-                onChange={updateFiles}
-                accept='image/*'
-                value={file}
-                className='mx-auto my-0 md:mx-0 md:my-0 lg:mx-0 lg:my-0 flex justify-center items-center w-80 -mt-5 mb-4 md:mb-0 lg:mb-0 lg:w-full md:w-full md:h-1/4 lg:h-1/2 h-1/3 relative top-12 bg-black text-white '
-            >
-                {file.length > 0 ? (
-                    <FileMosaic
-                        {...file[0]}
-                        preview // Adjust image size and cover
-                    />
-                ) : (
-                    <div className='border-none md:border-4 md:border-blue-600 md:border-dashed lg:border-4 lg:border-blue-600 lg:border-dashed p-2 md:p-4 lg:p-4 rounded-lg'>
-                        <p className='text-sm md:text-lg lg:text-xl'>Drag & Drop or click to select an image</p>
+                {/* cad image div */}
+                <div className='w-96 h-full overflow-hidden mx-auto my-0 flex justify-end z-10 rounded-xl'>
+                    {/* Card Image  */}
+                    <img src={img1} alt=" racipe image" className='w-auto h-80 object-cover lg:w-full rounded-xl shadow-md shadow-black' />
+                </div>
+
+                {/* on hover this content will display */}
+                <div className='flex absolute top-0 left-0  flex-col w-96 h-80 z-10 text-white rounded-xl hover:bg-gradient-to-b from-transparent to-black opacity-0 hover:opacity-100 transition-all duration-200 ease-in-out'>
+
+                    <div className='w-full px-6 absolute bottom-12'>
+                        <h1 className='text-3xl font-myBold6'>Heading Here</h1>
                     </div>
-                )}
-            </Dropzone>
 
+                    {/* Username and Favorite Icon Div */}
+                    <div className='px-6 flex items-center justify-between w-full absolute bottom-2'>
+                        <div>
+                            <h3 className='text-lg text-blue-600' title='Owner username'>@username</h3>
+                        </div>
 
-            {/* Recipe Form */}
-            <div className='w-96 mt-6 md:w-full lg:w-full mx-auto my-0 md:mx-0 md:my-0 lg:mx-0 lg:my-0'>
+                        {/* Favorite Icon bottom */}
+                        <div className='text-4xl'>
+                            <button onClick={toggleFavorite} title='Favorite'>
+                                {
+                                    favorite ? <MdOutlineFavorite className='text-red-700' /> : <MdFavoriteBorder />
+                                }
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-                {/* Your recipe form components go here */}
-                <form className=" flex flex-col gap-2 mg:gap-4 lg:gap-4 items-center relative top-8 mx-auto my-0 md:mx-0 md:my-0 lg:mx-0 lg:my-0">
-                    <input type="text" placeholder='Racipe Name' className='outline-none p-2 rounded shadow-sm shadow-black w-80 md:w-1/2 lg:w-1/2' />
-                    <input type="text" placeholder='Tags' className='outline-none p-2 rounded shadow-sm shadow-black w-80 md:w-1/2 lg:w-1/2' />
-                    <input type="text" placeholder='Ingredient' className='outline-none p-2 rounded shadow-sm shadow-black w-80 md:w-1/2 lg:w-1/2' />
-                    <textarea name="" id="" cols="25" rows="5"
-                    placeholder='Description'
-                    className='p-3 outline-none shadow-sm shadow-black rounded w-80 md:w-1/2 lg:w-1/2'>
-                    </textarea>
-
-                    <button className='bg-black text-white hover:bg-opacity-90 p-2 rounded w-1/4'>Upload</button>
-                </form>
             </div>
-        </div>
+        </>
     );
 }
 

@@ -7,6 +7,9 @@ import AllRecipes from "./AllRecipes/AllRecipes";
 import ProfilePreview from "./ProfilePreview/ProfilePreview";
 import RecipeCard from "./RecipeCard/RecipeCard";
 import RecipePreview from "./RecipePreview/RecipePreview";
+import Login from "./Login/Login"
+import Registration from "./Registration/Registration"
+import UserAuth from "./UserAuth/UserAuth"
 
 // Export each component without the default keyword
 export {
@@ -18,4 +21,7 @@ export {
   ProfilePreview,
   RecipeCard,
   RecipePreview,
+  Login,
+  Registration,
+  UserAuth
 };

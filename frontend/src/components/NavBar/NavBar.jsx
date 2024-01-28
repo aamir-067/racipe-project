@@ -23,7 +23,7 @@ const NavBar = () => {
                 />
                 <div className='w-80 lg:w-1/3 relative -mt-14'>
                     <button
-                        className='p-2 text-3xl bg-slate-900 z-20 rounded absolute right-4 top-2 transition'
+                        className='p-2 text-3xl bg-slate-900 z-20 rounded absolute right-4 top-1 transition'
                         onClick={toggle}
                     >
                         {openMenu ? <RxCross2 /> : <RiMenu3Line />}
