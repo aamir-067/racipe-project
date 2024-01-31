@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { upload } from "../middlewares/multer.middleware.js";
-import { changeUserAvatar, changeUserFullName, changeUserPassword, deleteUserAccount, getUserAccountDetails, logOutUser, loginUser, refreshAccessToken, registerUser } from "../controllers/user.controller.js";
+import { changeUserAvatar, changeUserFullName, changeUserPassword, deleteUserAccount, getUserAccountDetails, getUserWishlists, logOutUser, loginUser, refreshAccessToken, registerUser } from "../controllers/user.controller.js";
 import { verifyToken } from "../middlewares/checkLogin.middleware.js";
 
 
@@ -27,6 +27,10 @@ router.route("/refresh-tokens").post(verifyToken, refreshAccessToken);
 router.route("/change-fullName").post(verifyToken, changeUserFullName);
 router.route("/change-password").post(verifyToken, changeUserPassword);
 router.route("/change-avatar").post(verifyToken, upload.single("avatar"), changeUserAvatar);
+
+
+router.route("/wishlists").get(verifyToken, getUserWishlists);
+
 
 // ! danger zone
 router.route("/delete-account").delete(verifyToken, deleteUserAccount);

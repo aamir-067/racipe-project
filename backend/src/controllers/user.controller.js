@@ -339,6 +339,45 @@ export const getUserAccountDetails = asyncHandler(async (req, res) => {
     )
 })
 
+export const getUserWishlists = asyncHandler(async (req, res) => {
+    // user must be logged in.
+    const { _id } = req.user;
+
+    const wishListed = await User.aggregate([
+        {
+            $match: {
+                _id: _id
+            }
+        }, {
+            $lookup: {
+                from: "wishlists",
+                localField: "_id",
+                foreignField: "user",
+                as: "allWishlists",
+            }
+        },
+        {
+            $lookup: {
+                from: "recipes",
+                localField: "allWishlists.recipe",
+                foreignField: "_id",
+                as: "wishListedRecipes",
+            }
+        },
+        {
+            $project: {
+                wishListedRecipes: 1,
+                _id: 0
+            }
+        }
+    ]);
+
+    console.log(wishListed);
+    return res.status(200).json(
+        new ApiResponse(200, "fetched successfully", { wishListedRecipes: wishListed[0].wishListedRecipes })
+    )
+});
+
 
 
 
