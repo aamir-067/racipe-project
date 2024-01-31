@@ -1,13 +1,9 @@
-<<<<<<< Updated upstream
 import React, { useState } from 'react';
 import { Dropzone, FileMosaic } from "@dropzone-ui/react";
-=======
 /**
  * this card will represent each recipe on the AllRecipe component.
  * and this will be clickable sso that you can see the full details of the recipe in the other component.
  */
-import React from 'react'
->>>>>>> Stashed changes
 
 const RecipeCard = () => {
     const [file, setFile] = useState([]);
@@ -48,8 +44,8 @@ const RecipeCard = () => {
                     <input type="text" placeholder='Tags' className='outline-none p-2 rounded shadow-sm shadow-black w-80 md:w-1/2 lg:w-1/2' />
                     <input type="text" placeholder='Ingredient' className='outline-none p-2 rounded shadow-sm shadow-black w-80 md:w-1/2 lg:w-1/2' />
                     <textarea name="" id="" cols="25" rows="5"
-                    placeholder='Description'
-                    className='p-3 outline-none shadow-sm shadow-black rounded w-80 md:w-1/2 lg:w-1/2'>
+                        placeholder='Description'
+                        className='p-3 outline-none shadow-sm shadow-black rounded w-80 md:w-1/2 lg:w-1/2'>
                     </textarea>
 
                     <button className='bg-black text-white hover:bg-opacity-90 p-2 rounded w-1/4'>Upload</button>

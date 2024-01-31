@@ -1,11 +1,11 @@
 import React from "react"
-import {Header, RecipeCard} from "./components/index"
-const App = ()=> {
+import { Header, RecipeCard } from "./components/index"
+const App = () => {
 
     return (
         <>
-        {/* <Header /> */}
-        <RecipeCard />
+            <Header />
+            <RecipeCard />
         </>
     )
 }
