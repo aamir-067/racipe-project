@@ -252,7 +252,6 @@ export const changeUserAvatar = asyncHandler(async (req, res) => {
 
 
 // ! danger
-
 export const deleteUserAccount = asyncHandler(async (req, res) => {
     const { _id } = req?.user;
 
@@ -292,9 +291,6 @@ export const deleteUserAccount = asyncHandler(async (req, res) => {
         )
 })
 
-
-
-
 // name, email, avatar, uploadedRecipes, wishlists.
 export const getUserAccountDetails = asyncHandler(async (req, res) => {
     const { username } = req.params;
@@ -313,10 +309,17 @@ export const getUserAccountDetails = asyncHandler(async (req, res) => {
             }
         }, {
             $lookup: {
-                from: "wishlist",
+                from: "wishlists",
                 foreignField: "user",
                 localField: "_id",
                 as: "wishlistRecipes"
+            }
+        }, {
+            $lookup: {
+                from: "recipes",
+                localField: "wishlistRecipes.recipe",
+                foreignField: "_id",
+                as: "wishlistRecipes",
             }
         }, {
             $project: {
@@ -337,7 +340,7 @@ export const getUserAccountDetails = asyncHandler(async (req, res) => {
     return res.status(200).json(
         new ApiResponse(200, "account fetched", { account: account[0] })
     )
-})
+});
 
 export const getUserWishlists = asyncHandler(async (req, res) => {
     // user must be logged in.

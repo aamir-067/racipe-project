@@ -55,7 +55,7 @@ export const uploadRecipe = asyncHandler(async (req, res) => {
             new ApiResponse(200, "recipe uploaded successfully", { recipe })
         );
 
-})
+});
 
 export const addToWishlist = asyncHandler(async (req, res) => {
     // user must be logged in.
@@ -106,6 +106,29 @@ export const addToWishlist = asyncHandler(async (req, res) => {
         )
 
 });
+
+export const deleteFromWishlist = asyncHandler(async (req, res) => {
+    // see if online.
+    // check if the wishlist is available
+    // check if the wishlist is done by the client
+    // delete the wishlist from the wishlists
+    // send response
+
+    const { _id } = req.user;
+    const { recipeId } = req.body;
+
+    const deletedWishlist = await Wishlist.findOneAndDelete({
+        $and: [{ user: _id }, { recipe: new mongoose.Types.ObjectId(recipeId) }]
+    });
+
+    if (!deletedWishlist) {
+        throw new ApiError(404, "recipe not found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, "wishlist removed successfully", { deletedWishlist })
+    )
+})
 
 
 export const deleteUploadedRecipe = asyncHandler(async (req, res) => {

@@ -4,6 +4,7 @@ import { upload } from "../middlewares/multer.middleware.js";
 import {
     UserUploadedRecipes,
     addToWishlist,
+    deleteFromWishlist,
     deleteUploadedRecipe,
     editRecipeCoverImage,
     editRecipeDescription,
@@ -30,6 +31,8 @@ router.route("/upload").post(
 router.route("/delete-recipe").delete(verifyToken, deleteUploadedRecipe);
 
 router.route("/add-to-wishlist").post(verifyToken, addToWishlist);
+
+router.route("/remove-from-wishlist").get(verifyToken, deleteFromWishlist);
 
 router.route("/user-uploaded-recipes").post(verifyToken, UserUploadedRecipes);
 
