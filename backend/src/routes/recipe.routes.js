@@ -15,6 +15,7 @@ import {
     getAllRecipesOrderByWishlists,
     uploadRecipe
 } from "../controllers/recipe.controller.js";
+import { searchRecipe } from "../controllers/user.controller.js";
 const router = new Router();
 
 
@@ -56,6 +57,8 @@ router.route("/edit-recipe/:recipeId/cover-image").patch(
     upload.single("coverImage"),
     editRecipeCoverImage);
 
+
+router.route("/search-recipe").get(searchRecipe);
 
 
 export { router }

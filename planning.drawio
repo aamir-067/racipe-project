@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="A4oLy7jvje0LCx9hwnTJ" name="Page-1">
-        <mxGraphModel dx="1232" dy="476" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1181" dy="393" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -281,13 +281,13 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="72" value="Search Recipe&lt;br&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=#B09500;fillColor=#e3c800;fontColor=#000000;" parent="1" vertex="1">
+                <mxCell id="72" value="Search Recipe&lt;br&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=#001DBC;fillColor=#0050ef;fontColor=#ffffff;" parent="1" vertex="1">
                     <mxGeometry x="-220" y="170" width="100" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="74" value="see by title" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=#B09500;fillColor=#e3c800;fontColor=#000000;" parent="1" vertex="1">
+                <mxCell id="74" value="see by title" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=#001DBC;fillColor=#0050ef;fontColor=#ffffff;" parent="1" vertex="1">
                     <mxGeometry x="-200" y="265" width="80" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="75" value="see in tags" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=#B09500;fillColor=#e3c800;fontColor=#000000;" parent="1" vertex="1">
+                <mxCell id="75" value="see in tags" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=#001DBC;fillColor=#0050ef;fontColor=#ffffff;" parent="1" vertex="1">
                     <mxGeometry x="-200" y="380" width="80" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="76" value="" style="endArrow=classic;html=1;" parent="1" edge="1">
@@ -310,7 +310,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="79" value="see in ingrediants" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=#B09500;fillColor=#e3c800;fontColor=#000000;" parent="1" vertex="1">
+                <mxCell id="79" value="see in ingrediants" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=#001DBC;fillColor=#0050ef;fontColor=#ffffff;" parent="1" vertex="1">
                     <mxGeometry x="-200" y="320" width="120" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="82" style="edgeStyle=none;html=1;" parent="1" source="81" edge="1">

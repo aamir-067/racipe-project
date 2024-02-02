@@ -382,5 +382,40 @@ export const getUserWishlists = asyncHandler(async (req, res) => {
 });
 
 
+// For searching the recipe.
+export const searchRecipe = asyncHandler(async (req, res) => {
+    // get the search value
+    // break it in the array
+    // search for each.
+    // append the all Recipes 
+    //
+    let { search } = req.body;
+    if (!search) {
+        throw new ApiError(401, "search parameter is missing");
+    }
+    search = search.split(" ").map(item => item.trim());
+
+    const searchResult = await Recipe.find({
+        $or: [
+            {
+                name: { $in: [search.map(item => new RegExp(item, "i"))] }
+            },
+            {
+                tags: { $in: [search.map(item => new RegExp(item, "i"))] }
+            },
+            {
+                ingredients: { $in: [search.map(item => new RegExp(item, "i"))] }
+            }
+        ]
+    });
+
+    console.log(searchResult);
+
+    return res.status(200).json(
+        new ApiResponse(200, "search result fetched", { result: searchResult })
+    )
+})
+
+
 
 
