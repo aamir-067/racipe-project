@@ -28,7 +28,6 @@ const generateAccessTokens = async (userId) => {
 export const registerUser = asyncHandler(async (req, res) => {
 
     const { fullName, username, email, password } = req.body;
-    console.log(req.body);
 
     // if the required field is not given.
     const isEmpty = [username, email, fullName, password].some((item) => {
@@ -294,7 +293,6 @@ export const deleteUserAccount = asyncHandler(async (req, res) => {
 // name, email, avatar, uploadedRecipes, wishlists.
 export const getUserAccountDetails = asyncHandler(async (req, res) => {
     const { username } = req.params;
-    console.log(username);
     const account = await User.aggregate([
         {
             $match: {
@@ -375,7 +373,6 @@ export const getUserWishlists = asyncHandler(async (req, res) => {
         }
     ]);
 
-    console.log(wishListed);
     return res.status(200).json(
         new ApiResponse(200, "fetched successfully", { wishListedRecipes: wishListed[0].wishListedRecipes })
     )

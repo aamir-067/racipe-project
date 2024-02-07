@@ -58,6 +58,7 @@ router.route("/edit-recipe/:recipeId/cover-image").patch(
     editRecipeCoverImage);
 
 
+//search recipe.
 router.route("/search-recipe").get(searchRecipe);
 
 

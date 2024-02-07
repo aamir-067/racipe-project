@@ -248,7 +248,6 @@ export const getAllRecipesOrderByDate = asyncHandler(async (req, res) => {
         throw new ApiError(403, "Route not found");
     }
 
-    console.log(order, asc);
     const allRecipes = await Recipe.aggregate([{
         $sort: {
             "createdAt": asc
@@ -279,7 +278,6 @@ export const editRecipeName = asyncHandler(async (req, res) => {
     // check if the person is the owner of the recipe
     const owner = req.user?._id;
     if (recipe.owner.toString() !== owner.toString()) {
-        console.log("recipe owner === requester", recipe.owner.toString(), owner);
         throw new ApiError(401, "Un Authorized request");
     }
 
@@ -315,7 +313,6 @@ export const editRecipeCoverImage = asyncHandler(async (req, res) => {
     // check if the person is the owner.
     const owner = req.user?._id;
     if (recipe.owner.toString() !== owner.toString()) {
-        console.log("recipe owner === requester", recipe.owner, owner);
         throw new ApiError(401, "Un Authorized request");
     }
 
@@ -351,7 +348,6 @@ export const editRecipeCoverImage = asyncHandler(async (req, res) => {
 export const editRecipeDescription = asyncHandler(async (req, res) => {
     const { recipeId } = req.params;
     const { description } = req.body;
-    console.log(description);
     if (!(recipeId && description)) {
         throw new ApiError(401, "recipe id or description is missing");
     }
@@ -379,7 +375,6 @@ export const editRecipeIngredients = asyncHandler(async (req, res) => {
     }
 
     ingredients = ingredients.split(",").map(item => item.trim());
-    console.log(ingredients);
 
     // check if the caller is owner and the recipe is available.
 
@@ -425,22 +420,19 @@ export const searchRecipe = asyncHandler(async (req, res) => {
         appliedFilter = "createdAt"
     }
 
-
-
     search = search.split(" ").map(item => item.trim());
-    console.log(new RegExp(`${search.join("|")}`));
     const searchResult = await Recipe.aggregate([
         {
             $match: {
                 $or: [
                     {
-                        name: { $regex: new RegExp(`${search.join("|")}`) }
+                        name: { $regex: new RegExp(`${search.join("|")}`, "i") }
                     },
                     {
-                        tags: { $in: [...search] }
+                        tags: { $in: [...search, ...search.map(item => item.toUpperCase()), ...search.map(item => item.toLowerCase())] }
                     },
                     {
-                        ingredients: { $in: [...search] }
+                        ingredients: { $in: [...search, ...search.map(item => item.toUpperCase()), ...search.map(item => item.toLowerCase())] }
                     }
                 ]
             }
@@ -452,7 +444,6 @@ export const searchRecipe = asyncHandler(async (req, res) => {
         }
     ]);
 
-    console.log(searchResult);
 
     return res.status(200).json(
         new ApiResponse(200, "search result fetched", searchResult)
