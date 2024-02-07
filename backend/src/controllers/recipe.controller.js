@@ -397,3 +397,64 @@ export const editRecipeIngredients = asyncHandler(async (req, res) => {
     );
 })
 
+
+// For searching the recipe.
+export const searchRecipe = asyncHandler(async (req, res) => {
+    // get the search value
+    // break it in the array
+    // search for each.
+    // append the all Recipes 
+    //
+
+    let { search, asc, byPopularity, byData, byName } = req.body;
+
+    // in there must be one filter applied if not then result will be based on popularity.
+    const isFilterApplied = [byPopularity, byData, byName].some(item => item ? true : false);
+
+    if (!([search, isFilterApplied, typeof asc !== undefined].every(item => item ? true : false))) {
+        throw new ApiError(401, "search parameter is missing");
+    }
+
+    // check which filter is applied and then set it. //TODO : make it functional.
+    let appliedFilter;
+    if (byPopularity) {
+        appliedFilter = "wishlistsCount"
+    } else if (byName) {
+        appliedFilter = "name"
+    } else if (byData) {
+        appliedFilter = "createdAt"
+    }
+
+
+
+    search = search.split(" ").map(item => item.trim());
+    console.log(new RegExp(`${search.join("|")}`));
+    const searchResult = await Recipe.aggregate([
+        {
+            $match: {
+                $or: [
+                    {
+                        name: { $regex: new RegExp(`${search.join("|")}`) }
+                    },
+                    {
+                        tags: { $in: [...search] }
+                    },
+                    {
+                        ingredients: { $in: [...search] }
+                    }
+                ]
+            }
+        },
+        {
+            $sort: {
+                [appliedFilter]: asc ? 1 : -1
+            }
+        }
+    ]);
+
+    console.log(searchResult);
+
+    return res.status(200).json(
+        new ApiResponse(200, "search result fetched", searchResult)
+    )
+})

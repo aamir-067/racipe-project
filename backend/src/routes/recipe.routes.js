@@ -15,7 +15,7 @@ import {
     getAllRecipesOrderByWishlists,
     uploadRecipe
 } from "../controllers/recipe.controller.js";
-import { searchRecipe } from "../controllers/user.controller.js";
+import { searchRecipe } from "../controllers/recipe.controller.js";
 const router = new Router();
 
 
