@@ -410,7 +410,7 @@ export const searchRecipe = asyncHandler(async (req, res) => {
         throw new ApiError(401, "search parameter is missing");
     }
 
-    // check which filter is applied and then set it. //TODO : make it functional.
+    // check which filter is applied and then set it.
     let appliedFilter;
     if (byPopularity) {
         appliedFilter = "wishlistsCount"
