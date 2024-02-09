@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
-import { RiMenu3Line } from 'react-icons/ri';
-import { RxCross2 } from 'react-icons/rx';
-=======
-
 import React, { useState } from 'react';
 import { RiMenu3Line } from 'react-icons/ri';
 import { RxCross2 } from 'react-icons/rx';
@@ -11,7 +5,6 @@ import { RxCross2 } from 'react-icons/rx';
  * No need explain.
  * position will be fixed to the top.
  */
->>>>>>> 882c3f23f3d290fd12ccefdab783fbef2bbfd7a8
 
 const NavBar = () => {
     const [openMenu, setOpenMenu] = useState(false);

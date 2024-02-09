@@ -20,7 +20,7 @@ const AllRecipes = () => {
                     <option value="order by alphabets">Order by Alphabets</option>
                 </select>
             </div>
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full pl-6'>
+            <div className='grid grid-cols-1 md:grid-cols-2 grid-flow-dense lg:grid-cols-3 w-11/12 mx-auto'>
                 <RecipeCard />
                 <RecipeCard />
                 <RecipeCard />

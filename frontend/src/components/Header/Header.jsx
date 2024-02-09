@@ -6,10 +6,6 @@ import img1 from "../../assets/img1.jpg"
  * in this the top recipe images will be shoed here. at the landing page.
  */
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 882c3f23f3d290fd12ccefdab783fbef2bbfd7a8
 const Header = () => {
     return (
         <>

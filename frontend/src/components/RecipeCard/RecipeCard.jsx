@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD
+
 import { MdFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
 import img1 from "../../assets/img1.jpg"
-=======
-import { Dropzone, FileMosaic } from "@dropzone-ui/react";
->>>>>>> 882c3f23f3d290fd12ccefdab783fbef2bbfd7a8
+
+// import { Dropzone, FileMosaic } from "@dropzone-ui/react";
+
 /**
  * this card will represent each recipe on the AllRecipe component.
  * and this will be clickable sso that you can see the full details of the recipe in the other component.
@@ -18,7 +18,7 @@ const RecipeCard = () => {
     }
     return (
         <>
-            <div className=' relative w-96 md:w-full lg:w-full h-full grid grid-cols-1 mx-auto my-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 '>
+            <div className=' relative md:w-full h-full grid grid-cols-1 mx-auto my-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 '>
 
                 {/* cad image div */}
                 <div className='w-96 h-full overflow-hidden mx-auto my-0 flex justify-end z-10 rounded-xl'>
@@ -50,10 +50,8 @@ const RecipeCard = () => {
                     </div>
                 </div>
 
-<<<<<<< HEAD
-=======
                 {/* Your recipe form components go here */}
-                <form className=" flex flex-col gap-2 mg:gap-4 lg:gap-4 items-center relative top-8 mx-auto my-0 md:mx-0 md:my-0 lg:mx-0 lg:my-0">
+                {/* <form className=" flex flex-col gap-2 mg:gap-4 lg:gap-4 items-center relative top-8 mx-auto my-0 md:mx-0 md:my-0 lg:mx-0 lg:my-0">
                     <input type="text" placeholder='Racipe Name' className='outline-none p-2 rounded shadow-sm shadow-black w-80 md:w-1/2 lg:w-1/2' />
                     <input type="text" placeholder='Tags' className='outline-none p-2 rounded shadow-sm shadow-black w-80 md:w-1/2 lg:w-1/2' />
                     <input type="text" placeholder='Ingredient' className='outline-none p-2 rounded shadow-sm shadow-black w-80 md:w-1/2 lg:w-1/2' />
@@ -63,8 +61,7 @@ const RecipeCard = () => {
                     </textarea>
 
                     <button className='bg-black text-white hover:bg-opacity-90 p-2 rounded w-1/4'>Upload</button>
-                </form>
->>>>>>> 882c3f23f3d290fd12ccefdab783fbef2bbfd7a8
+                </form> */}
             </div>
         </>
     );
