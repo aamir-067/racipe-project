@@ -9,7 +9,7 @@ import RecipeCard from "./RecipeCard/RecipeCard";
 import RecipePreview from "./RecipePreview/RecipePreview";
 import Login from "./Login/Login"
 import Registration from "./Registration/Registration"
-import UserAuth from "./UserAuth/UserAuth"
+import Footer from './Footer/Footer'
 
 // Export each component without the default keyword
 export {
@@ -23,5 +23,5 @@ export {
   RecipePreview,
   Login,
   Registration,
-  UserAuth
+  Footer
 };

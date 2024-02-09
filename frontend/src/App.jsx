@@ -1,5 +1,5 @@
 import React from "react"
-import { Header, ProfilePreview, EditProfile, UserAuth, Registration, Login, AllRecipes } from "./components/index"
+import { Header, ProfilePreview, EditProfile, Registration, Login, AllRecipes, EditRecipe, RecipePreview } from "./components/index"
 const App = () => {
 
     return (
@@ -7,10 +7,11 @@ const App = () => {
             {/* <Header /> */}
             {/* < ProfilePreview /> */}
             {/* <EditProfile /> */}
-            {/* <UserAuth /> */}
             {/* <Registration /> */}
             {/* <Login /> */}
             {/* <AllRecipes /> */}
+            {/* < EditRecipe /> */}
+            {/* <RecipePreview /> */}
         </>
     )
 }

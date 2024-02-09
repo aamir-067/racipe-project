@@ -6,8 +6,6 @@ import img1 from "../../assets/img1.jpg"
  * in this the top recipe images will be shoed here. at the landing page.
  */
 
-import React from 'react'
-
 const Header = () => {
     return (
         <>
