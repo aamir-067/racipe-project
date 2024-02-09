@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { MdFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
 import img1 from "../../assets/img1.jpg"
+/**
+ * this card will represent each recipe on the AllRecipe component.
+ * and this will be clickable sso that you can see the full details of the recipe in the other component.
+ */
 
 const RecipeCard = () => {
     const [favorite, setFavorite] = useState(false)

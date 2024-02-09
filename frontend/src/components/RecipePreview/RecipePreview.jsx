@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import img1 from '../../assets/img1.jpg'
-
+/**
+ * when you click on the card of the recipe you will be redirected to this component
+ * which actually shows all the details of the recipe.
+ */
 const RecipePreview = () => {
 
     return (

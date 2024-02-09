@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { Dropzone, FileMosaic } from "@dropzone-ui/react";
+/*
+
+Same like the edit Recipe.
+ */
 
 const EditRecipe = () => {
     const [file, setFile] = useState([]);
@@ -40,8 +44,8 @@ const EditRecipe = () => {
                     <input type="text" placeholder='Tags' className='outline-none p-2 rounded shadow-sm shadow-black w-80 md:w-1/2 lg:w-1/2' />
                     <input type="text" placeholder='Ingredient' className='outline-none p-2 rounded shadow-sm shadow-black w-80 md:w-1/2 lg:w-1/2' />
                     <textarea name="" id="" cols="25" rows="5"
-                    placeholder='Description'
-                    className='p-3 outline-none shadow-sm shadow-black rounded w-80 md:w-1/2 lg:w-1/2'>
+                        placeholder='Description'
+                        className='p-3 outline-none shadow-sm shadow-black rounded w-80 md:w-1/2 lg:w-1/2'>
                     </textarea>
 
                     <button className='bg-black text-white hover:bg-opacity-90 p-2 rounded w-1/4'>Done</button>

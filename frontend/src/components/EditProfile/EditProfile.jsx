@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { IoImagesOutline } from "react-icons/io5";
-
+/*
+No need to explain. cleared from the name.
+Note: when you goto this component there will be the current value in the input tag's placeholders.
+*/
 
 const EditProfile = () => {
     const [selectedImage, setSelectedImage] = useState(null);
