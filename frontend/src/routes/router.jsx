@@ -8,6 +8,7 @@ export const router = createBrowserRouter(
             {/* <Route path="/dashboard" element={<h2>hello</h2>} /> */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Registration />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/:recipeId/details" element={<Registration />} />
         </Route>
     )
