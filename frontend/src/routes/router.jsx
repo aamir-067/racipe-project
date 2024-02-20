@@ -9,7 +9,7 @@ export const router = createBrowserRouter(
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Registration />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/:recipeId/details" element={<Registration />} />
+            <Route path="/:recipeId/details" element={<RecipePreview />} />
         </Route>
     )
 );
