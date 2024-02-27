@@ -1,9 +1,10 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
-import { uploadToCloudinary } from "../utils/cloudinary.js";
+import { deleteFromCloudinary, uploadToCloudinary } from "../utils/cloudinary.js";
 import { Recipe } from "../models/recipe.model.js";
 import { Wishlist } from "../models/wishlist.model.js";
+import mongoose from "mongoose";
 
 
 export const uploadRecipe = asyncHandler(async (req, res) => {
@@ -54,7 +55,7 @@ export const uploadRecipe = asyncHandler(async (req, res) => {
             new ApiResponse(200, "recipe uploaded successfully", { recipe })
         );
 
-})
+});
 
 export const addToWishlist = asyncHandler(async (req, res) => {
     // user must be logged in.
@@ -77,7 +78,7 @@ export const addToWishlist = asyncHandler(async (req, res) => {
 
 
     // check if its already in wishlist or not.
-    const isWishListed = await Wishlist.find({
+    const isWishListed = await Wishlist.findOne({
         $and: [{ user: req.user._id }, { recipe: recipe._id }]
     })
 
@@ -105,6 +106,29 @@ export const addToWishlist = asyncHandler(async (req, res) => {
         )
 
 });
+
+export const deleteFromWishlist = asyncHandler(async (req, res) => {
+    // see if online.
+    // check if the wishlist is available
+    // check if the wishlist is done by the client
+    // delete the wishlist from the wishlists
+    // send response
+
+    const { _id } = req.user;
+    const { recipeId } = req.body;
+
+    const deletedWishlist = await Wishlist.findOneAndDelete({
+        $and: [{ user: _id }, { recipe: new mongoose.Types.ObjectId(recipeId) }]
+    });
+
+    if (!deletedWishlist) {
+        throw new ApiError(404, "recipe not found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, "wishlist removed successfully", { deletedWishlist })
+    )
+})
 
 
 export const deleteUploadedRecipe = asyncHandler(async (req, res) => {
@@ -224,7 +248,6 @@ export const getAllRecipesOrderByDate = asyncHandler(async (req, res) => {
         throw new ApiError(403, "Route not found");
     }
 
-    console.log(order, asc);
     const allRecipes = await Recipe.aggregate([{
         $sort: {
             "createdAt": asc
@@ -237,3 +260,192 @@ export const getAllRecipesOrderByDate = asyncHandler(async (req, res) => {
     )
 });
 
+
+// ? editing the recipe.
+
+export const editRecipeName = asyncHandler(async (req, res) => {
+    const { recipeId } = req.params;
+    const { name } = req.body;
+    if (!(name && recipeId)) {
+        throw new ApiError(401, "name not found");
+    }
+
+    const recipe = await Recipe.findById(recipeId);
+    if (!recipe) {
+        throw new ApiError(401, "recipe not found");
+    }
+
+    // check if the person is the owner of the recipe
+    const owner = req.user?._id;
+    if (recipe.owner.toString() !== owner.toString()) {
+        throw new ApiError(401, "Un Authorized request");
+    }
+
+    const newRecipe = await Recipe.findByIdAndUpdate(recipeId,
+        {
+            name
+        },
+        {
+            new: true
+        }
+    );
+
+    return res.status(200).json(
+        new ApiResponse(200, "recipe name updated successfully", { newRecipe })
+    )
+});
+
+export const editRecipeCoverImage = asyncHandler(async (req, res) => {
+    const coverImage = req.file;
+    const { recipeId } = req.params;
+
+    if (!(coverImage && recipeId)) {
+        throw new ApiError(401, "coverImage not found");
+    }
+
+    // get the recipe,
+    const recipe = await Recipe.findById(recipeId);
+
+    if (!recipe) {
+        throw new ApiError(401, "recipe not found");
+    }
+
+    // check if the person is the owner.
+    const owner = req.user?._id;
+    if (recipe.owner.toString() !== owner.toString()) {
+        throw new ApiError(401, "Un Authorized request");
+    }
+
+
+
+    // upload the new to cloudinary.
+    const uploadedCoverImage = await uploadToCloudinary(coverImage);
+
+    if (!uploadedCoverImage) {
+        throw new ApiError(402, "error while uploading cover image");
+    }
+
+    // delete the prev image.
+    await deleteFromCloudinary(recipe.coverImage);
+
+
+    // update the new image.
+
+    const newRecipe = await Recipe.findByIdAndUpdate(recipeId,
+        {
+            coverImage: uploadedCoverImage.url
+        },
+        {
+            new: true
+        }
+    );
+    // send the response
+    return res.status(200).json(
+        new ApiResponse(200, "recipe coverImage updated successfully", { newRecipe })
+    )
+});
+
+export const editRecipeDescription = asyncHandler(async (req, res) => {
+    const { recipeId } = req.params;
+    const { description } = req.body;
+    if (!(recipeId && description)) {
+        throw new ApiError(401, "recipe id or description is missing");
+    }
+    // check if the caller is owner and the recipe is available.
+
+    const recipe = await Recipe.findById(recipeId);
+    if (!(recipe && (recipe.owner.toString() === req.user._id.toString()))) {
+        throw new ApiError(404, "unauthorized request recipe not found");
+    }
+
+    // update the description and send the response.
+    recipe.description = description;
+    await recipe.save();
+
+    return res.status(200).json(
+        new ApiResponse(200, "description updated successfully")
+    );
+})
+export const editRecipeIngredients = asyncHandler(async (req, res) => {
+    const { recipeId } = req.params;
+    let { ingredients } = req.body;
+
+    if (!(recipeId && ingredients)) {
+        throw new ApiError(401, "recipe id or ingredients is missing");
+    }
+
+    ingredients = ingredients.split(",").map(item => item.trim());
+
+    // check if the caller is owner and the recipe is available.
+
+    const recipe = await Recipe.findById(recipeId);
+    if (!(recipe && (recipe.owner.toString() === req.user._id.toString()))) {
+        throw new ApiError(404, "unauthorized request recipe not found");
+    }
+
+    // update the ingredients and send the response.
+    recipe.ingredients = ingredients;
+    await recipe.save({ validateBeforeSave: false });
+
+    return res.status(200).json(
+        new ApiResponse(200, "recipe ingredients updated successfully")
+    );
+})
+
+
+// For searching the recipe.
+export const searchRecipe = asyncHandler(async (req, res) => {
+    // get the search value
+    // break it in the array
+    // search for each.
+    // append the all Recipes 
+    //
+
+    let { search, asc, byPopularity, byData, byName } = req.body;
+
+    // in there must be one filter applied if not then result will be based on popularity.
+    const isFilterApplied = [byPopularity, byData, byName].some(item => item ? true : false);
+
+    if (!([search, isFilterApplied, typeof asc !== undefined].every(item => item ? true : false))) {
+        throw new ApiError(401, "search parameter is missing");
+    }
+
+    // check which filter is applied and then set it.
+    let appliedFilter;
+    if (byPopularity) {
+        appliedFilter = "wishlistsCount"
+    } else if (byName) {
+        appliedFilter = "name"
+    } else if (byData) {
+        appliedFilter = "createdAt"
+    }
+
+    search = search.split(" ").map(item => item.trim());
+    const searchResult = await Recipe.aggregate([
+        {
+            $match: {
+                $or: [
+                    {
+                        name: { $regex: new RegExp(`${search.join("|")}`, "i") }
+                    },
+                    {
+                        tags: { $in: [...search, ...search.map(item => item.toUpperCase()), ...search.map(item => item.toLowerCase())] }
+                    },
+                    {
+                        ingredients: { $in: [...search, ...search.map(item => item.toUpperCase()), ...search.map(item => item.toLowerCase())] }
+                    }
+                ]
+            }
+        },
+        {
+            $sort: {
+                [appliedFilter]: asc ? 1 : -1
+            }
+        }
+    ]);
+
+
+    return res.status(200).json(
+        new ApiResponse(200, "search result fetched", searchResult)
+    )
+})

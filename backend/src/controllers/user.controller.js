@@ -28,7 +28,6 @@ const generateAccessTokens = async (userId) => {
 export const registerUser = asyncHandler(async (req, res) => {
 
     const { fullName, username, email, password } = req.body;
-    console.log(req.body);
 
     // if the required field is not given.
     const isEmpty = [username, email, fullName, password].some((item) => {
@@ -252,7 +251,6 @@ export const changeUserAvatar = asyncHandler(async (req, res) => {
 
 
 // ! danger
-
 export const deleteUserAccount = asyncHandler(async (req, res) => {
     const { _id } = req?.user;
 
@@ -292,9 +290,95 @@ export const deleteUserAccount = asyncHandler(async (req, res) => {
         )
 })
 
+// name, email, avatar, uploadedRecipes, wishlists.
+export const getUserAccountDetails = asyncHandler(async (req, res) => {
+    const { username } = req.params;
+    const account = await User.aggregate([
+        {
+            $match: {
+                "username": username
+            }
+        }, {
+            $lookup: {
+                from: "recipes",
+                foreignField: "owner",
+                localField: "_id",
+                as: "uploadedRecipes"
+            }
+        }, {
+            $lookup: {
+                from: "wishlists",
+                foreignField: "user",
+                localField: "_id",
+                as: "wishlistRecipes"
+            }
+        }, {
+            $lookup: {
+                from: "recipes",
+                localField: "wishlistRecipes.recipe",
+                foreignField: "_id",
+                as: "wishlistRecipes",
+            }
+        }, {
+            $project: {
+                uploadedRecipes: 1,
+                wishlistRecipes: 1,
+                fullName: 1,
+                username: 1,
+                email: 1,
+                avatar: 1,
+            }
+        }
+    ]);
+
+    if (!account.length) {
+        throw new ApiError(404, "account not found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, "account fetched", { account: account[0] })
+    )
+});
+
+export const getUserWishlists = asyncHandler(async (req, res) => {
+    // user must be logged in.
+    const { _id } = req.user;
+
+    const wishListed = await User.aggregate([
+        {
+            $match: {
+                _id: _id
+            }
+        }, {
+            $lookup: {
+                from: "wishlists",
+                localField: "_id",
+                foreignField: "user",
+                as: "allWishlists",
+            }
+        },
+        {
+            $lookup: {
+                from: "recipes",
+                localField: "allWishlists.recipe",
+                foreignField: "_id",
+                as: "wishListedRecipes",
+            }
+        },
+        {
+            $project: {
+                wishListedRecipes: 1,
+                _id: 0
+            }
+        }
+    ]);
+
+    return res.status(200).json(
+        new ApiResponse(200, "fetched successfully", { wishListedRecipes: wishListed[0].wishListedRecipes })
+    )
+});
 
 
-//TODO : get the User Account. 
 
 
 
