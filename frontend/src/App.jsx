@@ -1,9 +1,23 @@
 import React from "react"
-const App = ()=> {
-
+import { NavBar, Footer } from "./components/index.js"
+import { Header, RecipeCard, ProfilePreview, EditProfile, Registration, Login, AllRecipes, EditRecipe, RecipePreview } from "./components/index"
+import { Outlet } from "react-router-dom"
+const App = () => {
     return (
         <>
-        <div className="bg-blue-600">App</div>
+            <NavBar />
+            {/* <Header /> */}
+            {/* < ProfilePreview /> */}
+            {/* <EditProfile /> */}
+            {/* <Registration /> */}
+            {/* <Login /> */}
+            <AllRecipes />
+            <Outlet />
+            {/* < EditRecipe /> */}
+            {/* <RecipePreview /> */}
+            {/* <Header /> */}
+            {/* <RecipeCard /> */}
+            <Footer />
         </>
     )
 }
