@@ -11,7 +11,7 @@ const App = () => {
             {/* <EditProfile /> */}
             {/* <Registration /> */}
             {/* <Login /> */}
-            <AllRecipes />
+            {/* <AllRecipes /> */}
             <Outlet />
             {/* < EditRecipe /> */}
             {/* <RecipePreview /> */}
