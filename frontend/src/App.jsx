@@ -4,21 +4,12 @@ import { Header, RecipeCard, ProfilePreview, EditProfile, Registration, Login, A
 import { Outlet } from "react-router-dom"
 const App = () => {
     return (
-        <>
+        <div className="relative min-h-screen">
             <NavBar />
-            {/* <Header /> */}
-            {/* < ProfilePreview /> */}
-            {/* <EditProfile /> */}
-            {/* <Registration /> */}
-            {/* <Login /> */}
             {/* <AllRecipes /> */}
             <Outlet />
-            {/* < EditRecipe /> */}
-            {/* <RecipePreview /> */}
-            {/* <Header /> */}
-            {/* <RecipeCard /> */}
             <Footer />
-        </>
+        </div>
     )
 }
 

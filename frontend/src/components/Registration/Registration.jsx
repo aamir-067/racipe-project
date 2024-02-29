@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { IoImagesOutline } from "react-icons/io5";
 import img1 from "../../assets/img1.jpg"
+import { NavLink } from 'react-router-dom';
 
 
 const Registration = () => {
@@ -42,7 +43,9 @@ const Registration = () => {
                                 <input type="email" className='my-2 p-3 rounded outline-none h-10 text-black w-80' placeholder='Enter Email' />
                                 <input type="password" className='my-2 p-3 rounded outline-none h-10 text-black w-80' placeholder='Enter Password' />
                                 <input type="password" className='my-2 p-3 rounded outline-none h-10 text-black w-80' placeholder='Enter Password' />
-                                <label className="mr-12 text-center">Already Account ? <label className='cursor-pointer text-blue-700'>Login</label></label>
+                                <NavLink to={"/login"}>
+                                    <label className="mr-12 text-center">Already Account ? <label className='cursor-pointer text-blue-700'>Login</label></label>
+                                </NavLink>
                             </form>
                         </div>
 

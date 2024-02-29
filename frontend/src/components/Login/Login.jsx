@@ -1,5 +1,6 @@
 import React from "react"
 import img1 from "../../assets/img1.jpg"
+import { NavLink } from "react-router-dom";
 
 const Login = () => {
 
@@ -16,7 +17,9 @@ const Login = () => {
                                 <input type="email" className='my-2 p-3 rounded outline-none h-10 text-black w-80' placeholder='Enter Email' />
                                 <input type="password" className='my-2 p-3 rounded outline-none h-10 text-black w-80' placeholder='Enter Password' />
 
-                                <label className="mr-12 text-center">Create Account Here <label className='cursor-pointer text-blue-700'>Registration</label></label>
+                                <NavLink to={"/register"}>
+                                    <label className="mr-12 text-center">Create Account Here <label className='cursor-pointer text-blue-700'>Registration</label></label>
+                                </NavLink>
                             </form>
                         </div>
 
