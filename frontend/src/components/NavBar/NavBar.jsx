@@ -64,6 +64,11 @@ const NavBar = () => {
                                         Home
                                     </li>
                                 </NavLink>
+                                <NavLink to={"/search/all-recipes/result"} onClick={() => setOpenMenu(false)}>
+                                    <li className='flex items-center h-16 text-xl px-4 hover:bg-slate-900'>
+                                        All recipes
+                                    </li>
+                                </NavLink>
 
                                 <NavLink to={"/register"} onClick={() => setOpenMenu(false)}>
                                     <li className='flex items-center h-16 text-xl px-4 hover:bg-slate-900'>
