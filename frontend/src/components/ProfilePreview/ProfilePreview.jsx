@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import img1 from '../../assets/img1.jpg'
 import RecipeCard from '../RecipeCard/RecipeCard';
@@ -9,7 +9,6 @@ import RecipeCard from '../RecipeCard/RecipeCard';
 
 const ProfilePreview = () => {
     const [toggle, setToggle] = useState(false)
-
 
 
     return (

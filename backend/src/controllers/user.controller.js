@@ -55,13 +55,15 @@ export const registerUser = asyncHandler(async (req, res) => {
         avatar = await uploadToCloudinary(avatarImage);
     }
 
+
+    console.log(avatarImage, avatar);
     // create a new user.
     const user = await User.create({
         username,
         email,
         password,
         fullName,
-        avatar: avatar.url || ""
+        avatar: avatar?.url || ""
     })
 
     const newUser = await User.findById(user._id).select("-password -refreshToken");

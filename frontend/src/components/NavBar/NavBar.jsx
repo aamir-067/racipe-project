@@ -16,13 +16,9 @@ const NavBar = () => {
         let value = searchRef.current?.value;
         console.log(value);
 
-        value && navigate("/search/value/result")
+        value && navigate(`/search/${value}/result`);
     }
 
-
-    document.addEventListener("keypress", (e) => {
-        e.key == "Enter" && handleRef();
-    })
     return (
         <>
             <nav className='flex pl-8 justify-between items-center w-full h-16 bg-black text-white relative z-10'>
@@ -33,16 +29,15 @@ const NavBar = () => {
                     </div>
                 </NavLink>
 
-                <div className='p-2 pl-4 outline-black rounded text-black mx-1 my-0 bg-white flex items-center justify-between w-6/12'>
+                <form className='p-2 pl-4 outline-black rounded text-black mx-1 my-0 bg-white flex items-center justify-between w-6/12'>
                     <input
-                        onSubmit={handleRef}
                         type='search'
                         ref={searchRef}
                         placeholder='Search for recipe ...'
                         className='outline-none rounded w-11/12 text-black mx-1 my-0'
                     />
                     <button onClick={handleRef} className='w-8'><img src={searchIcon} /></button>
-                </div>
+                </form>
 
                 <div className='w-full lg:w-1/3 relative -mt-14'>
                     <button
