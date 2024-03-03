@@ -4,7 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     isLogin: false,
-    accessToken: "",
+    accDetails: null,
     wishListedRecipes: [],
     uploadedRecipes: [],
 }
@@ -16,10 +16,16 @@ const userAcc = createSlice({
         getAccessToken: () => { },
         getUploadedRecipes: () => { },
         getWishListedRecipes: () => { },
+        updateData: (state, action) => {
+            state.accDetails = action.payload.accDetails;
+            state.wishListedRecipes = action.payload.wishListedRecipes;
+            state.uploadedRecipes = action.payload.uploadedRecipes;
+            state.isLogin = action.payload.isLogin;
+        }
     }
 });
 
 
 export default userAcc.reducer;
 
-export const { checkIsLogIn, getAccessToken, getUploadedRecipes, getWishListedRecipes } = userAcc.actions;
+export const { checkIsLogIn, getAccessToken, getUploadedRecipes, updateData, getWishListedRecipes } = userAcc.actions;

@@ -2,14 +2,21 @@ import React, { useEffect, useState } from 'react'
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import img1 from '../../assets/img1.jpg'
 import RecipeCard from '../RecipeCard/RecipeCard';
-/**
- * when you goto profile then you will show this component.
- * route to this profile will be like   localhost:3000/:username
- */
+import { useNavigate } from 'react-router-dom';
+import { store } from '../../app/store';
+import { getRefreshToken } from '../../utils/getRefreshToken';
 
 const ProfilePreview = () => {
     const [toggle, setToggle] = useState(false)
+    const navigate = useNavigate();
 
+    useEffect(() => {
+        const refreshToken = getRefreshToken();
+        if (!refreshToken) {
+            console.log('temp', refreshToken);
+            navigate("/login");
+        }
+    })
 
     return (
         <>
