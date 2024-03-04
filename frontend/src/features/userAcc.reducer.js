@@ -4,7 +4,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     isLogin: false,
-    accDetails: null,
+    accDetails: {
+        username: "",
+        email: "",
+        fullName: "",
+        avatar: "",
+    },
     wishListedRecipes: [],
     uploadedRecipes: [],
 }
@@ -12,10 +17,6 @@ const userAcc = createSlice({
     name: "userAcc",
     initialState,
     reducers: {
-        checkIsLogIn: () => { },
-        getAccessToken: () => { },
-        getUploadedRecipes: () => { },
-        getWishListedRecipes: () => { },
         updateData: (state, action) => {
             state.accDetails = action.payload.accDetails;
             state.wishListedRecipes = action.payload.wishListedRecipes;
@@ -28,4 +29,4 @@ const userAcc = createSlice({
 
 export default userAcc.reducer;
 
-export const { checkIsLogIn, getAccessToken, getUploadedRecipes, updateData, getWishListedRecipes } = userAcc.actions;
+export const { updateData } = userAcc.actions;

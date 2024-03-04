@@ -3,6 +3,8 @@ import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 export const verifyToken = asyncHandler(async (req, res, next) => {
+
+
     try {
 
         // get the token
@@ -13,7 +15,7 @@ export const verifyToken = asyncHandler(async (req, res, next) => {
 
 
         const refreshToken = req?.cookies?.refreshToken ||
-            req?.headers?.Authorization.replace("Bearer ", "");
+            req?.headers?.authorization.replace("Bearer ", "");
 
         if (!refreshToken) {
             throw new ApiError(400, "Please login first.");
@@ -33,6 +35,7 @@ export const verifyToken = asyncHandler(async (req, res, next) => {
 
         next();
     } catch (error) {
+        console.log(error);
         throw new ApiError(401, "something went wrong", [error?.massage])
     }
 });

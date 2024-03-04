@@ -18,7 +18,7 @@ const Login = () => {
         // check if already logged in.
         const refreshToken = getRefreshToken();
         if (refreshToken) {
-            console.log("already logged in");
+            // TODO : Give client an error message
             return;
         }
 
@@ -27,6 +27,7 @@ const Login = () => {
         // check if there is something in the inputs.
         if (!(email.trim() && password.trim())) {
             //error
+            // TODO : Give client an error message
         }
 
         // check if this is email or username.
@@ -41,23 +42,23 @@ const Login = () => {
                 email, password, username
             });
 
-            console.log(response.data);
-
             // save the tokens. so that it will saved in brave browser too
             Cookies.set("refreshToken", response.data.data.refreshToken);
-            Cookies.set("accessToken", response.data.data.accessToken);
-
-            console.log(response.data.data.refreshToken);
+            Cookies.set("user", response.data.data.user.username);
 
             localStorage.setItem("refreshToken", response.data.data.refreshToken);
-            localStorage.setItem("accessToken", response.data.data.accessToken);
             // save the result in store
 
             const prevState = store.getState(prev => prev.userAcc);
             store.dispatch(updateData({
                 ...prevState,
                 isLogin: true,
-                accDetails: response.data.data.user,
+                accDetails: {
+                    username: response.data.data.user.username,
+                    email: response.data.data.user.email,
+                    fullName: response.data.data.user.fullName,
+                    avatar: response.data.data.user.avatar,
+                },
             }));
 
             setLoading(false);
@@ -68,6 +69,7 @@ const Login = () => {
             setLoading(false);
             console.log(error);
             // error
+            // TODO : Give client an error message
         }
 
 

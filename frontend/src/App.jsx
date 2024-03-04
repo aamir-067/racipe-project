@@ -4,19 +4,27 @@ import { Outlet } from "react-router-dom"
 import { getRefreshToken } from "./utils/getRefreshToken.js"
 import { store } from "./app/store.js"
 import { updateData } from "./features/userAcc.reducer.js"
+import Cookies from "js-cookie"
 
 const App = () => {
 
     useEffect(() => {
         const refreshToken = getRefreshToken();
-
+        const { userAcc } = store.getState();
+        const user = Cookies.get("user");
         if (!refreshToken) {
             store.dispatch(updateData({
+                ...userAcc,
                 isLogin: false,
             }));
         } else {
             store.dispatch(updateData({
+                ...userAcc,
                 isLogin: true,
+                accDetails: {
+                    ...userAcc.accDetails,
+                    username: user
+                }
             }));
         }
 

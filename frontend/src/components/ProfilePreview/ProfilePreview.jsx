@@ -2,21 +2,63 @@ import React, { useEffect, useState } from 'react'
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import img1 from '../../assets/img1.jpg'
 import RecipeCard from '../RecipeCard/RecipeCard';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { store } from '../../app/store';
 import { getRefreshToken } from '../../utils/getRefreshToken';
+import axios from 'axios';
+import { serverApi } from '../../CONSTANTS';
+import { updateData } from '../../features/userAcc.reducer';
 
 const ProfilePreview = () => {
     const [toggle, setToggle] = useState(false)
     const navigate = useNavigate();
+    const { username } = useParams();
 
-    useEffect(() => {
-        const refreshToken = getRefreshToken();
-        if (!refreshToken) {
-            console.log('temp', refreshToken);
-            navigate("/login");
+    console.log("username  : ", username, username.length);
+
+    const [details, setDetails] = useState(undefined);
+    const getUserDetails = async () => {
+        if (!username?.trim()) {
+            // TODO : error massage
+            return;
         }
-    })
+
+        const { userAcc } = store.getState(state => state);
+        try {
+
+            const { data: { data: { account } } } = await axios.get(serverApi + `users/p/${username}`);
+            console.log(account);
+
+            store.dispatch(updateData({
+                ...userAcc,
+                accDetails: {
+                    ...userAcc.accDetails,
+                    avatar: account.avatar,
+                    username: account.username,
+                    fullName: account.fullName,
+                    email: account.email
+                },
+                wishListedRecipes: account.wishListRecipes,
+                uploadedRecipes: account.uploadedRecipes,
+            }))
+
+
+            return account;
+
+
+        } catch (error) {
+            console.log(error);
+            //TODO error handling
+            return;
+        }
+    }
+    useEffect(() => {
+        getUserDetails()
+            .then(() => {
+                let data = store.getState().userAcc;
+                setDetails(data);
+            })
+    }, []);
 
     return (
         <>
@@ -69,15 +111,13 @@ const ProfilePreview = () => {
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 w-full overflow-scroll pl-6 bg-gray-400 md:hideScroll lg:hideScroll'
                         style={{ height: "85vh" }}
                     >
-                        <RecipeCard />
-                        <RecipeCard />
-                        <RecipeCard />
-                        <RecipeCard />
-                        <RecipeCard />
-                        <RecipeCard />
-                        <RecipeCard />
-                        <RecipeCard />
-                        <RecipeCard />
+                        {
+                            details?.uploadedRecipes.map(item => {
+                                return <RecipeCard />
+                            })
+                        }
+                        {/* <RecipeCard /> */}
+
                     </div>
                 </div>
             </div>

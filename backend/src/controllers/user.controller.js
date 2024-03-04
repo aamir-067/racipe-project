@@ -120,7 +120,6 @@ export const loginUser = asyncHandler(async (req, res) => {
     user = await User.findOne(user._id).select("-password -refreshToken");
 
     return res.status(200)
-        .cookie("accessToken", accessToken, { httpOnly: true, secure: true })
         .cookie("refreshToken", refreshToken, { httpOnly: true, secure: true })
         .json(
             new ApiResponse(200, "user logged in successfully", {
@@ -142,7 +141,6 @@ export const logOutUser = asyncHandler(async (req, res) => {
 
     return res.status(200)
         .clearCookie("refreshToken", { httpOnly: true, secure: true })
-        .clearCookie("accessToken", { httpOnly: true, secure: true })
         .json(
             new ApiResponse(200, "user Logged out", { user })
         );

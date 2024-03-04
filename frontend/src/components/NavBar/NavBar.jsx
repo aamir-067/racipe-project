@@ -5,24 +5,86 @@ import { NavLink } from "react-router-dom";
 import searchIcon from "../../assets/search.png";
 import { useNavigate } from 'react-router-dom';
 import { store } from '../../app/store';
+import { getRefreshToken } from "../../utils/getRefreshToken";
+import axios from "axios";
+import { serverApi } from "../../CONSTANTS";
+import Cookies from 'js-cookie';
+import { updateData } from '../../features/userAcc.reducer';
 
 const NavBar = () => {
     const [openMenu, setOpenMenu] = useState(false);
     const searchRef = useRef(null);
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+    const [user, setUser] = useState("");
 
 
     const handleRef = () => {
         let value = searchRef.current?.value;
-        console.log(value);
         value && navigate(`/search/${value}/result`);
     }
+
+
+    const handleLogout = async () => {
+        // make sure it logged in already.
+        // get the refreshToken from localStorage and sent it in headers.
+        // wait for response
+        // clear the localStorage.
+        const refreshToken = getRefreshToken();
+        console.log("refresh Token :", refreshToken);
+        if (!refreshToken) {
+            // user in not logged in
+            // TODO : Give client an error message.
+            return;
+        }
+        setOpenMenu(false);
+
+        let response;
+        try {
+            response = await axios.post(serverApi + "users/logout", undefined, {
+                headers: {
+                    "authorization": "Bearer " + refreshToken
+                }
+            });
+
+            if (!response.data.success) {
+                // error 
+                return;
+            };
+
+            // clear the localStorage.
+            // clear the cookies.
+            Cookies.remove("refreshToken");
+            localStorage.clear();
+
+            // reset the state.
+            store.dispatch(updateData({
+                isLogin: false,
+                accDetails: {
+                    username: "",
+                    email: "",
+                    fullName: "",
+                    avatar: "",
+                },
+                wishListedRecipes: [],
+                uploadedRecipes: [],
+            }))
+
+            // navigate to the login page.
+            navigate("/login");
+
+        } catch (error) {
+            console.log(error);
+            // TODO : Give client an error message;
+        }
+    }
+
 
     const { userAcc: { isLogin } } = store.getState(state => state);
     useEffect(() => {
         isLogin ? setIsLoggedIn(true) : setIsLoggedIn(false);
+        let username = store.getState(prev => prev)?.userAcc?.accDetails?.username;
+        setUser(username ? username : "");
     }, [isLogin]);
     return (
         <>
@@ -54,7 +116,7 @@ const NavBar = () => {
                     {openMenu && (
                         <div className='w-full absolute right-0 -mt-4 top-16 z-10 bg-black transition-opacity'>
                             <ul className='flex flex-col w-full mt-4'>
-                                <NavLink className={`${isLoggedIn ? "block" : "hidden"}`} to={"/user/testUser"} onClick={() => setOpenMenu(false)}>
+                                <NavLink className={`${isLoggedIn ? "block" : "hidden"}`} to={`/user/${user}`} onClick={() => setOpenMenu(false)}>
                                     <li className='flex items-center h-16 text-xl px-4 hover:bg-slate-900'>
                                         My Account
                                     </li>
@@ -76,11 +138,12 @@ const NavBar = () => {
                                     </li>
                                 </NavLink>
 
-                                <NavLink className={`${isLoggedIn ? "block" : "hidden"}`} to={"/login"} onClick={() => setOpenMenu(false)}>
+                                {/* to={"/login"} */}
+                                <button className={`${isLoggedIn ? "block" : "hidden"}`} onClick={handleLogout}>
                                     <li className='flex items-center h-16 text-xl px-4 hover:bg-slate-900'>
                                         Log out
                                     </li>
-                                </NavLink>
+                                </button>
                             </ul>
                         </div>
                     )}
