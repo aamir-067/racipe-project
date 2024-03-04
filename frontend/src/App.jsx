@@ -11,13 +11,14 @@ const App = () => {
     useEffect(() => {
         const refreshToken = getRefreshToken();
         const { userAcc } = store.getState();
-        const user = Cookies.get("user");
+
         if (!refreshToken) {
             store.dispatch(updateData({
                 ...userAcc,
                 isLogin: false,
             }));
         } else {
+            const user = Cookies.get("user");
             store.dispatch(updateData({
                 ...userAcc,
                 isLogin: true,

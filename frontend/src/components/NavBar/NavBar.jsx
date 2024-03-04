@@ -55,6 +55,7 @@ const NavBar = () => {
             // clear the localStorage.
             // clear the cookies.
             Cookies.remove("refreshToken");
+            Cookies.remove("user");
             localStorage.clear();
 
             // reset the state.
