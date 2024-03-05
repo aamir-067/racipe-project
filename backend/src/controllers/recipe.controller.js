@@ -261,6 +261,24 @@ export const getAllRecipesOrderByDate = asyncHandler(async (req, res) => {
 });
 
 
+//? get recipe details.
+
+export const fetchRecipeDetails = asyncHandler(async (req, res) => {
+
+    const { recipeId } = req.params;
+
+    const recipe = await Recipe.findById(recipeId);
+
+    if (!recipe) {
+        throw new ApiError(404, "recipe not found");
+    }
+
+
+    return res.status(200).json(
+        new ApiResponse(200, "recipe details fetched successfully", { recipe })
+    );
+})
+
 // ? editing the recipe.
 
 export const editRecipeName = asyncHandler(async (req, res) => {

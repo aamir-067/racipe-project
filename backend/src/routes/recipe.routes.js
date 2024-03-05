@@ -10,6 +10,7 @@ import {
     editRecipeDescription,
     editRecipeIngredients,
     editRecipeName,
+    fetchRecipeDetails,
     getAllRecipesOrderByDate,
     getAllRecipesOrderByName,
     getAllRecipesOrderByWishlists,
@@ -39,6 +40,9 @@ router.route("/user-uploaded-recipes").post(verifyToken, UserUploadedRecipes);
 
 
 
+
+//? get recipe details by id
+router.route("/preview/:recipeId").get(fetchRecipeDetails);
 
 //? fetch all the recipes
 router.route("/sort-by-wishlists/:order").get(getAllRecipesOrderByWishlists);
