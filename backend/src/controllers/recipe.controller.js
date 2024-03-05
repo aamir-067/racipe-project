@@ -418,23 +418,15 @@ export const searchRecipe = asyncHandler(async (req, res) => {
     // append the all Recipes 
     //
 
-    let { search, asc, byPopularity, byData, byName } = req.body;
+    let { search, asc, filter } = req.body;
 
     // in there must be one filter applied if not then result will be based on popularity.
-    const isFilterApplied = [byPopularity, byData, byName].some(item => item ? true : false);
-
-    if (!([search, isFilterApplied, typeof asc !== undefined].every(item => item ? true : false))) {
-        throw new ApiError(401, "search parameter is missing");
+    if (!(["wishlistsCount", "name", "createdAt"].some(item => item === filter?.trim()))) {
+        throw new ApiError(401, "invalid filter applied");
     }
 
-    // check which filter is applied and then set it.
-    let appliedFilter;
-    if (byPopularity) {
-        appliedFilter = "wishlistsCount"
-    } else if (byName) {
-        appliedFilter = "name"
-    } else if (byData) {
-        appliedFilter = "createdAt"
+    if (!([search, filter, asc].every(item => item ? true : false))) {
+        throw new ApiError(401, "search parameter is missing");
     }
 
     search = search.split(" ").map(item => item.trim());
@@ -456,12 +448,10 @@ export const searchRecipe = asyncHandler(async (req, res) => {
         },
         {
             $sort: {
-                [appliedFilter]: asc ? 1 : -1
+                [filter]: asc == "yes" ? 1 : -1
             }
         }
     ]);
-
-
     return res.status(200).json(
         new ApiResponse(200, "search result fetched", searchResult)
     )

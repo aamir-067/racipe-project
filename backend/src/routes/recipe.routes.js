@@ -63,7 +63,7 @@ router.route("/edit-recipe/:recipeId/cover-image").patch(
 
 
 //search recipe.
-router.route("/search-recipe").get(searchRecipe);
+router.route("/search-recipe").post(searchRecipe);
 
 
 export { router }

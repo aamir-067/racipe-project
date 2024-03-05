@@ -8,7 +8,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { RecipeCard } from '../index'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useParams } from 'react-router-dom'
 import axios from 'axios';
 import { serverApi } from '../../CONSTANTS';
 
@@ -17,6 +17,7 @@ const AllRecipes = () => {
     const [recipes, setRecipes] = useState([]);
 
 
+    const { searchQuery } = useParams();
 
     const handleFilter = (e) => {
         setFilter(e.target.value);
@@ -24,8 +25,36 @@ const AllRecipes = () => {
 
     const fetchRecipes = async () => {
         try {
-            const { data } = await axios.get(serverApi + `recipes/${filter}`);
-            setRecipes(data?.data.allRecipes);
+            if (searchQuery === "all-recipes") {
+                const { data } = await axios.get(serverApi + `recipes/${filter}`);
+                setRecipes(data?.data.allRecipes);
+            } else {
+
+                let [searchFilter, asc] = filter.split('/');
+                // modify the parameters.
+                let search;
+                switch (searchFilter) {
+                    case "sort-by-date":
+                        search = "createdAt"
+                        break;
+                    case "sort-by-name":
+                        search = "name"
+                        break;
+                    case "sort-by-wishlists":
+                        search = "wishlistsCount"
+                        break;
+                }
+                asc = asc === "ascending" ? true : false;
+
+                // sent the request
+                const { data } = await axios.post(serverApi + `recipes/search-recipe`, {
+                    search: searchQuery,
+                    asc: asc ? "yes" : "no",
+                    filter: search
+                });
+                setRecipes(data.data);
+
+            }
         } catch (error) {
             console.log(error);
             // TODO :  show error here

@@ -19,8 +19,10 @@ const NavBar = () => {
     const [user, setUser] = useState("");
 
 
-    const handleRef = () => {
+    const handleRef = (e) => {
+        e?.preventDefault();
         let value = searchRef.current?.value;
+        searchRef.current.value = "";
         value && navigate(`/search/${value}/result`);
     }
 
@@ -97,12 +99,12 @@ const NavBar = () => {
                     </div>
                 </NavLink>
 
-                <form className='p-2 pl-4 outline-black rounded text-black bg-white flex items-center justify-between lg:w-6/12 md:w-full md:mx-6'>
+                <form onSubmit={(e) => handleRef(e)} className='p-2 pl-4 outline-black rounded text-black bg-white flex items-center justify-between lg:w-6/12 md:w-full md:mx-6'>
                     <input
                         type='search'
                         ref={searchRef}
                         placeholder='Search for recipe ...'
-                        className='outline-none rounded text-black mx-1 my-0'
+                        className='outline-none w-full rounded text-black mx-1 my-0'
                     />
                     <button onClick={handleRef} className='w-8'><img src={searchIcon} /></button>
                 </form>
