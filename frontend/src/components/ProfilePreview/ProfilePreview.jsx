@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import img1 from '../../assets/img1.jpg'
 import RecipeCard from '../RecipeCard/RecipeCard';
-import { useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { store } from '../../app/store';
 import axios from 'axios';
 import { serverApi } from '../../CONSTANTS';
@@ -11,11 +11,10 @@ import Cookies from "js-cookie";
 
 const ProfilePreview = () => {
     const [toggle, setToggle] = useState(false)
-    const [recipeToggle, setRecipeToggle] = useState(false)
+    const [recipeToggle, setRecipeToggle] = useState("uploadedRecipes")
     const { username } = useParams();
 
     const loggedInUser = Cookies.get("user");
-
     const [details, setDetails] = useState({});
     const getUserDetails = async () => {
         if (!username?.trim()) {
@@ -27,12 +26,13 @@ const ProfilePreview = () => {
         try {
 
             const { data: { data: { account } } } = await axios.get(serverApi + `users/p/${username}`);
-            console.log(account);
 
-            store.dispatch(updateData({
+            // check if you are seeing own account.
+            const user = Cookies.get("user");
+            const isOwn = username === user;
+            isOwn && store.dispatch(updateData({
                 ...userAcc,
                 accDetails: {
-                    ...userAcc.accDetails,
                     avatar: account.avatar,
                     username: account.username,
                     fullName: account.fullName,
@@ -41,10 +41,7 @@ const ProfilePreview = () => {
                 wishListedRecipes: account.wishListRecipes,
                 uploadedRecipes: account.uploadedRecipes,
             }))
-
-
             return account;
-
 
         } catch (error) {
             console.log(error);
@@ -60,9 +57,18 @@ const ProfilePreview = () => {
     }
     useEffect(() => {
         getUserDetails()
-            .then(() => {
-                let data = store.getState().userAcc;
-                setDetails(data);
+            .then((account) => {
+                setDetails({
+                    isLogin: true,
+                    accDetails: {
+                        avatar: account.avatar,
+                        username: account.username,
+                        fullName: account.fullName,
+                        email: account.email
+                    },
+                    wishListedRecipes: account.wishListRecipes,
+                    uploadedRecipes: account.uploadedRecipes,
+                });
             })
     }, []);
 
@@ -86,46 +92,26 @@ const ProfilePreview = () => {
                     </div>
                 </div>
                 <div className='w-full flex flex-col bg-gray-400'>
-                    <div className='w-full z-20 absolute top-20 right-0 md:hidden lg:hidden'>
-                        <button
-                            className='text-3xl float-right pr-4'
-                            onClick={() => setToggle(!toggle)}>
-                            {
-                                toggle ? <IoIosArrowUp /> : <IoIosArrowDown />
-                            }
-                        </button>
-                        {
-                            toggle ? (
-                                <div className='w-full flex flex-col items-end -mt-10'>
-                                    <div className='w-36 h-32 flex flex-col justify-center bg-black gap-3 rounded'>
-                                        <button className=' text-white hover:bg-gray-800 h-1/3'>Uploaded</button>
-                                        <button className=' text-white hover:bg-gray-800 h-1/3'>Wishlist</button>
-                                    </div>
-                                </div>
-                            ) : (null)
-                        }
-                    </div>
-                    <div className='hidden md:block lg:block md:w-full md:h-12 lg:h-12 lg:w-full lg:relative md:relative mt-1 pr-2 '>
-                        <select onChange={(e) => handleRecipeToggle(e)} className='w-56 md:float-right lg:float-right p-2 flex gap-5 bg-black text-white justify-center items-center h-full rounded'>
+                    <div className='w-full h-12 my-4 relative mt-4 pr-2 '>
+                        <select onChange={(e) => handleRecipeToggle(e)} className='w-56 float-right p-2 flex gap-5 bg-black text-white justify-center items-center h-full rounded-md'>
                             <option
                                 className='bg-gray-800 p-2 rounded w-28'>
                                 Wishlist
                             </option>
                             <option
+                                selected
                                 className='bg-gray-800 p-2 rounded w-28'>
                                 Uploaded
                             </option>
                         </select>
                     </div>
-                    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 w-full overflow-scroll pl-6 bg-gray-400 md:hideScroll lg:hideScroll'
-                        style={{ height: "85vh" }}
+                    <div className=' w-full flex justify-start items-center mx-2 gap-2 flex-wrap bg-gray-400 mb-40'
                     >
                         {
                             details[recipeToggle]?.map((item, index) => {
-                                return <div key={index}><RecipeCard /></div>
+                                return <NavLink className={"w-4/12"} to={`/recipe/${item._id}/preview`} key={index}><RecipeCard details={item} /></NavLink>
                             })
                         }
-                        {/* <RecipeCard /> */}
 
                     </div>
                 </div>

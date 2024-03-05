@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-
-import { MdFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
-
 // import { Dropzone, FileMosaic } from "@dropzone-ui/react";
 
 /**
@@ -9,7 +6,8 @@ import { MdFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
  * and this will be clickable sso that you can see the full details of the recipe in the other component.
  */
 
-const RecipeCard = () => {
+const RecipeCard = ({ details } = {}) => {
+
     return (
         // <>
         //     {/* cad image div */}
@@ -44,7 +42,7 @@ const RecipeCard = () => {
         // </>
         <div className="w-full relative rounded-md border">
             <img
-                src="https://images.unsplash.com/photo-1522199755839-a2bacb67c546?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTF8fGJsb2d8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"
+                src={details?.coverImage ? details?.coverImage : "https://images.unsplash.com/photo-1522199755839-a2bacb67c546?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTF8fGJsb2d8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"}
                 alt="Laptop"
                 className="h-[200px] w-full rounded-md object-cover"
             />
@@ -52,13 +50,8 @@ const RecipeCard = () => {
             <div className='absolute w-full h-full left-0 bottom-0 hover:cursor-pointer
             hover:bg-gradient-to-b from-transparent to-black opacity-0 hover:opacity-100 transition-all duration-200 ease-in-out'>
 
-                <div className='w-full px-6 absolute bottom-8'>
-                    <h1 className='text-xl text-white'>Heading Here</h1>
-                </div>
-                <div className='px-6 flex items-center justify-between w-full absolute bottom-2'>
-                    <div>
-                        <h3 className='text-blue-600'>@username</h3>
-                    </div>
+                <div className='w-full px-4 absolute bottom-4'>
+                    <h1 className='text-xl text-white'>{details?.name}</h1>
                 </div>
             </div>
         </div>

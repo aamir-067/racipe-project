@@ -210,7 +210,6 @@ export const getAllRecipesOrderByWishlists = asyncHandler(async (req, res) => {
 });
 
 export const getAllRecipesOrderByName = asyncHandler(async (req, res) => {
-
     const { order } = req?.params;
     let asc;
     if (order === "ascending") {
