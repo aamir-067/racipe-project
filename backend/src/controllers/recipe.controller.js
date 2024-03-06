@@ -121,6 +121,12 @@ export const deleteFromWishlist = asyncHandler(async (req, res) => {
         $and: [{ user: _id }, { recipe: new mongoose.Types.ObjectId(recipeId) }]
     });
 
+    await Recipe.findByIdAndUpdate(recipeId, {
+        $inc: {
+            wishlistsCount: -1
+        }
+    })
+
     if (!deletedWishlist) {
         throw new ApiError(404, "recipe not found");
     }

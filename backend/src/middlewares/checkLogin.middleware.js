@@ -36,6 +36,6 @@ export const verifyToken = asyncHandler(async (req, res, next) => {
         next();
     } catch (error) {
         console.log(error);
-        throw new ApiError(401, "something went wrong", [error?.massage])
+        throw new ApiError(401, "user is not loggedIn. try again", [error?.massage])
     }
 });

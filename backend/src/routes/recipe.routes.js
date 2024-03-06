@@ -34,7 +34,7 @@ router.route("/delete-recipe").delete(verifyToken, deleteUploadedRecipe);
 
 router.route("/add-to-wishlist").post(verifyToken, addToWishlist);
 
-router.route("/remove-from-wishlist").get(verifyToken, deleteFromWishlist);
+router.route("/remove-from-wishlist").post(verifyToken, deleteFromWishlist);
 
 router.route("/user-uploaded-recipes").post(verifyToken, UserUploadedRecipes);
 

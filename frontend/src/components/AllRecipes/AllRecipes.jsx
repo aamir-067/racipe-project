@@ -63,7 +63,7 @@ const AllRecipes = () => {
 
     useEffect(() => {
         fetchRecipes();
-    }, [filter]);
+    }, [filter, searchQuery]);
 
     return (
         <div className='w-full h-screen'>

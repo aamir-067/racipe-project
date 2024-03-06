@@ -38,7 +38,7 @@ const ProfilePreview = () => {
                     fullName: account.fullName,
                     email: account.email
                 },
-                wishListedRecipes: account.wishListRecipes,
+                wishListedRecipes: account.wishlistRecipes,
                 uploadedRecipes: account.uploadedRecipes,
             }))
             return account;
@@ -66,7 +66,7 @@ const ProfilePreview = () => {
                         fullName: account.fullName,
                         email: account.email
                     },
-                    wishListedRecipes: account.wishListRecipes,
+                    wishListedRecipes: account.wishlistRecipes,
                     uploadedRecipes: account.uploadedRecipes,
                 });
             })

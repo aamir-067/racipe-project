@@ -342,12 +342,12 @@ export const getUserAccountDetails = asyncHandler(async (req, res) => {
 
 export const getUserWishlists = asyncHandler(async (req, res) => {
     // user must be logged in.
-    const { _id } = req.user;
+    const { username } = req.params;
 
     const wishListed = await User.aggregate([
         {
             $match: {
-                _id: _id
+                username
             }
         }, {
             $lookup: {

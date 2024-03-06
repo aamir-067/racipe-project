@@ -29,7 +29,7 @@ router.route("/change-password").post(verifyToken, changeUserPassword);
 router.route("/change-avatar").post(verifyToken, upload.single("avatar"), changeUserAvatar);
 
 
-router.route("/wishlists").get(verifyToken, getUserWishlists);
+router.route("/:username/wishlists").get(verifyToken, getUserWishlists);
 
 
 // ! danger zone
