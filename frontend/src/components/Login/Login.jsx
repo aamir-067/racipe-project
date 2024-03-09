@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { updateData } from "../../features/userAcc.reducer";
 import { store } from "../../app/store";
 import { getRefreshToken } from "../../utils/getRefreshToken";
+import Loading from "../Loading/Loading";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -107,14 +108,7 @@ const Login = () => {
                             className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${loading ? "" : "hidden"
                                 }`}
                         >
-                            <div className="flex space-x-2 justify-center items-center ">
-                                <div class="h-8 w-8 bg-black rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                                <div class="h-8 w-8 bg-black rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                                <div class="h-8 w-8 bg-black rounded-full animate-bounce"></div>
-                            </div>
-                            <h2 className="mt-4 text-2xl font-bold">
-                                Processing ...
-                            </h2>
+                            <Loading />
                         </div>
 
 

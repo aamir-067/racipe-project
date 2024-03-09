@@ -7,6 +7,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { serverApi } from "../../CONSTANTS";
 import { useNavigate } from "react-router-dom";
+import Loading from "../Loading/Loading";
 const Registration = () => {
 	const [selectedImage, setSelectedImage] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
@@ -96,9 +97,8 @@ const Registration = () => {
 					/>
 					<div className="absolute w-96 z-10 py-4 mt-12 pl-4 text-center bg-white bg-opacity-45 rounded-lg flex flex-col">
 						<div
-							className={`w-full h-full ${
-								isLoading ? "opacity-0" : "opacity-100"
-							}`}
+							className={`w-full h-full ${isLoading ? "opacity-0" : "opacity-100"
+								}`}
 						>
 							{/* Profile Image Drag and Drop or Select through click */}
 							<div
@@ -174,18 +174,10 @@ const Registration = () => {
 
 						{/* Loading sections */}
 						<div
-							className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${
-								isLoading ? "" : "hidden"
-							}`}
+							className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${isLoading ? "" : "hidden"
+								}`}
 						>
-							<div className="flex space-x-2 justify-center items-center ">
-								<div class="h-8 w-8 bg-black rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-								<div class="h-8 w-8 bg-black rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-								<div class="h-8 w-8 bg-black rounded-full animate-bounce"></div>
-							</div>
-							<h2 className="mt-4 text-2xl font-bold">
-								Processing ...
-							</h2>
+							<Loading />
 						</div>
 					</div>
 				</div>

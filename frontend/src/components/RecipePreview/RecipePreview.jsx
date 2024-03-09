@@ -7,6 +7,7 @@ import { serverApi } from "../../CONSTANTS";
 import { store } from "../../app/store";
 import { getRefreshToken } from "../../utils/getRefreshToken";
 import { updateData } from "../../features/userAcc.reducer";
+import Loading from "../Loading/Loading";
 
 const RecipePreview = () => {
 	const { recipeId } = useParams();
@@ -27,17 +28,6 @@ const RecipePreview = () => {
 		console.log(isWishListed ? "use already wishlist this recipe" : "user not wishlist this recipe");
 
 		setIsWishlist(isWishListed);
-	}
-
-	const isOwner = () => {
-		const { uploadedRecipes } = store.getState().userAcc;
-
-
-		const isOwnerRecipe = uploadedRecipes.some(recipe => {
-			return recipe?._id === details?._id ? true : false;
-		})
-
-		setOwnerRecipe(isOwnerRecipe);
 	}
 
 	const fetchUserWishlists = async () => {
@@ -63,29 +53,17 @@ const RecipePreview = () => {
 		}
 
 		try {
+			let apiUrl = serverApi + (isWishlist ? "recipes/remove-from-wishlist" : "recipes/add-to-wishlist");
 
-			if (!isWishlist) {
-				console.log(isWishlist, "calling if part");
-				let { data } = await axios.post(
-					serverApi + "recipes/add-to-wishlist",
-					{ recipeId: details._id }, {
-					headers: {
-						"authorization": `Bearer ${refreshToken}`
-					}
-				});
+			await axios.post(
+				apiUrl,
+				{ recipeId: details._id }, {
+				headers: {
+					"authorization": `Bearer ${refreshToken}`
+				}
+			});
 
-			} else {
-				console.log(isWishlist, "calling else part");
-				let { data } = await axios.post(
-					serverApi + "recipes/remove-from-wishlist",
-					{ recipeId: details._id }, {
-					headers: {
-						"authorization": `Bearer ${refreshToken}`
-					}
-				});
-			}
-
-			// fetch the user wishlists.
+			// update recipe details again.
 			await getRecipeDetails();
 		} catch (error) {
 			console.log(error);
@@ -98,9 +76,16 @@ const RecipePreview = () => {
 			const response = await axios.get(
 				serverApi + `recipes/preview/${recipeId}`
 			);
-			setDetails(response.data.data.recipe);
-			// await fetchUserWishlists();
 			await isAlreadyWishlist(response.data.data.recipe._id);
+
+			// check if the recipe is belongs to the current logged in user.
+			const { uploadedRecipes } = store.getState().userAcc;
+			const isOwnerRecipe = uploadedRecipes.some(recipe => {
+				return recipe?._id === details?._id ? true : false;
+			})
+			setOwnerRecipe(isOwnerRecipe);
+			setDetails(response.data.data.recipe);
+
 		} catch (error) {
 			console.log(error);
 			// TODO : show en error here.
@@ -108,67 +93,72 @@ const RecipePreview = () => {
 	}
 
 	useEffect(() => {
-		getRecipeDetails().then(() =>
-			isOwner()
-		)
-
-
+		getRecipeDetails()
 	}, []);
 
 	return (
 		<div className="min-h-screen bg-slate-300">
-			<div className="flex">
-				{/* image selector */}
-				<div className="  w-8/12 h-2/6 p-6">
-					<img
-						src={details?.coverImage}
-						alt="Recipe image"
-						className="object-cover w-full h-full rounded-md aspect-video"
-					/>
+			<div className={`${details === null ? "hidden" : ""}`}>
+				<div className="flex">
+					{/* image selector */}
+					<div className="  w-8/12 h-2/6 p-6">
+						<img
+							src={details?.coverImage}
+							alt="Recipe image"
+							className="object-cover w-full h-full rounded-md aspect-video"
+						/>
+					</div>
+
+					{/* Recipe Form */}
+					<div className=" w-4/12">
+
+						<div className="flex justify-between items-center h-14 mx-4 mt-10">
+							<div className="flex w-4/12 justify-start h-full items-center">
+								<button onClick={handleWishList} ><img className="object-cover w-8 h-8 rounded-md aspect-square" src={isWishlist ? wishListBadgeFill : wishListBadgeShallow} /></button>
+								<p className="text-xl px-1 font-myBold6">{details?.wishlistsCount}</p>
+							</div>
+
+							<div className={`flex justify-center gap-x-2 items-center ${ownerRecipe ? "opacity-100" : "opacity-0"}`}>
+								<button className="rounded bg-black text-white w-32 p-3 hover:bg-opacity-90">edit</button>
+								<button className="rounded bg-black text-white w-32 p-3 hover:bg-opacity-90">delete</button>
+							</div>
+						</div>
+						{/* Your recipe form components go here */}
+						<ul className=" mt-10 mx-4">
+							<li className="flex justify-start items-center gap-x-5">
+								<h2 className="font-bolder text-2xl ">Name:</h2>
+								<p className="">{details?.name}</p>
+							</li>
+
+							<li className="flex justify-start my-4 items-baseline gap-x-5">
+								<h2 className="font-bolder text-2xl ">
+									Ingredients:
+								</h2>
+								<p className="">
+									{details?.ingredients?.join(", ")}
+								</p>
+							</li>
+
+							<li className="flex justify-start items-baseline gap-x-5">
+								<h2 className="font-bolder text-2xl ">Tags:</h2>
+								<p className="">{details?.tags?.join(", ")}</p>
+							</li>
+						</ul>
+					</div>
 				</div>
 
-				{/* Recipe Form */}
-				<div className=" w-4/12">
-
-					<div className="flex justify-between items-center h-14 mx-4 mt-10">
-						<div className="flex w-4/12 justify-start h-full items-center">
-							<button onClick={handleWishList} ><img className="object-cover w-8 h-8 rounded-md aspect-square" src={isWishlist ? wishListBadgeFill : wishListBadgeShallow} /></button>
-							<p className="text-xl px-1 font-myBold6">{details?.wishlistsCount}</p>
-						</div>
-
-						<div className={`flex justify-center gap-x-2 items-center ${ownerRecipe ? "opacity-100" : "opacity-0"}`}>
-							<button className="rounded bg-black text-white w-32 p-3 hover:bg-opacity-90">edit</button>
-							<button className="rounded bg-black text-white w-32 p-3 hover:bg-opacity-90">delete</button>
-						</div>
-					</div>
-					{/* Your recipe form components go here */}
-					<ul className=" mt-10 mx-4">
-						<li className="flex justify-start items-center gap-x-5">
-							<h2 className="font-bolder text-2xl ">Name:</h2>
-							<p className="">{details?.name}</p>
-						</li>
-
-						<li className="flex justify-start my-4 items-baseline gap-x-5">
-							<h2 className="font-bolder text-2xl ">
-								Ingredients:
-							</h2>
-							<p className="">
-								{details?.ingredients?.join(", ")}
-							</p>
-						</li>
-
-						<li className="flex justify-start items-baseline gap-x-5">
-							<h2 className="font-bolder text-2xl ">Tags:</h2>
-							<p className="">{details?.tags?.join(", ")}</p>
-						</li>
-					</ul>
+				{/* description */}
+				<div className="mx-5">
+					<h2 className="font-bolder text-2xl">description:</h2>
+					<p className="ml-4">{details?.description}</p>
 				</div>
 			</div>
 
-			{/* description */}
-			<div className="mx-5">
-				<h2 className="font-bolder text-2xl">description:</h2>
-				<p className="ml-4">{details?.description}</p>
+			<div
+				className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${details === null ? "" : "hidden"
+					}`}
+			>
+				<Loading />
 			</div>
 		</div>
 	);

@@ -8,9 +8,9 @@ import axios from 'axios';
 import { serverApi } from '../../CONSTANTS';
 import { updateData } from '../../features/userAcc.reducer';
 import Cookies from "js-cookie";
+import Loading from '../Loading/Loading';
 
 const ProfilePreview = () => {
-    const [toggle, setToggle] = useState(false)
     const [recipeToggle, setRecipeToggle] = useState("uploadedRecipes")
     const { username } = useParams();
 
@@ -38,8 +38,8 @@ const ProfilePreview = () => {
                     fullName: account.fullName,
                     email: account.email
                 },
-                wishListedRecipes: account.wishlistRecipes,
-                uploadedRecipes: account.uploadedRecipes,
+                wishListedRecipes: account?.wishlistRecipes,
+                uploadedRecipes: account?.uploadedRecipes,
             }))
             return account;
 
@@ -66,15 +66,18 @@ const ProfilePreview = () => {
                         fullName: account.fullName,
                         email: account.email
                     },
-                    wishListedRecipes: account.wishlistRecipes,
-                    uploadedRecipes: account.uploadedRecipes,
+                    wishListedRecipes: account?.wishlistRecipes,
+                    uploadedRecipes: account?.uploadedRecipes,
                 });
+
+
             })
     }, []);
 
     return (
         <>
-            <div className='flex w-full box-border bg-white'>
+            <div className={`flex w-full box-border bg-white ${details.length ? "hidden" : ""
+                }`}>
 
                 <div className='hidden w-1/2 lg:flex flex-col '
                     style={{ height: "90vh" }}>
@@ -115,6 +118,15 @@ const ProfilePreview = () => {
 
                     </div>
                 </div>
+            </div>
+
+
+            {/* Loading */}
+            <div
+                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${details.length ? "" : "hidden"
+                    }`}
+            >
+                <Loading />
             </div>
         </>
     )
