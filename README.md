@@ -106,6 +106,9 @@ Build the production-ready frontend:
 
 `Contributions are welcome! 👋🏻`
 
+## Contibuters
+1. Safeer khan
+
 ## License 🪪
 
 This project is licensed under the MIT License.
