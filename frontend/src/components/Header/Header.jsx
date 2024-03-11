@@ -38,10 +38,10 @@ const Header = () => {
     }
 
     useEffect(() => {
-        setInterval(() => {
-            setCurrentImg(prev => prev === 3 ? 0 : prev + 1);
-        }, 10000);
         getTopRecipes();
+        setInterval(() => {
+        }, 1000);
+
     }, [])
 
     return (
@@ -59,28 +59,14 @@ const Header = () => {
                 {/* Image section */}
                 <div className='w-full relative  h-2/4 md:h-3/6'>
                     <div className='relative h-full'>
-                        <img src={imgs[currentImg]} alt="" className='absolute object-cover w-full h-full' /> {/* Make image full-screen */}
+                        <img src={topFiveRecipes[currentImg]?.coverImage} alt="" className='absolute object-cover w-full h-full' /> {/* Make image full-screen */}
                     </div>
                     <div className='absolute bottom-5 left-0 h-4 gap-4 w-full flex justify-center items-center'>
-                        <span onClick={() => setCurrentImg(0)} className={
-
-                            `h-4 w-4 cursor-pointer rounded-full ${currentImg === 0 ? "bg-gray-900" : "bg-gray-300"}`
-                        }></span>
-
-                        <span onClick={() => setCurrentImg(1)} className={
-
-                            `h-4 w-4 cursor-pointer rounded-full ${currentImg === 1 ? "bg-gray-900" : "bg-gray-300"}`
-                        }></span>
-
-                        <span onClick={() => setCurrentImg(2)} className={
-
-                            `h-4 w-4 cursor-pointer rounded-full ${currentImg === 2 ? "bg-gray-900" : "bg-gray-300"}`
-                        }></span>
-
-                        <span onClick={() => setCurrentImg(3)} className={
-
-                            `h-4 w-4 cursor-pointer rounded-full ${currentImg === 3 ? "bg-gray-900" : "bg-gray-300"}`
-                        }></span>
+                        {
+                            topFiveRecipes.map((item, index) =>
+                                <span onClick={() => setCurrentImg(index)} className={`h-4 w-4 cursor-pointer rounded-full ${currentImg === index ? "bg-gray-900" : "bg-gray-300"}`}></span>
+                            )
+                        }
                     </div>
                 </div>
 

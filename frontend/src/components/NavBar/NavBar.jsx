@@ -33,7 +33,6 @@ const NavBar = () => {
         // wait for response
         // clear the localStorage.
         const refreshToken = getRefreshToken();
-        console.log("refresh Token :", refreshToken);
         if (!refreshToken) {
             // user in not logged in
             // TODO : Give client an error message.

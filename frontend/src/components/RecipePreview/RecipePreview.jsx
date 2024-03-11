@@ -18,14 +18,12 @@ const RecipePreview = () => {
 	const isAlreadyWishlist = async (_id = "") => {
 		const wishListedRecipes = await fetchUserWishlists();
 
-		// console.log(wishListedRecipes);
 		const isWishListed = wishListedRecipes.some(recipe => {
-			console.log(recipe?._id == _id);
 			return recipe?._id == _id ? true : false;
 		})
 
 
-		console.log(isWishListed ? "use already wishlist this recipe" : "user not wishlist this recipe");
+		// console.log(isWishListed ? "use already wishlist this recipe" : "user not wishlist this recipe");
 
 		setIsWishlist(isWishListed);
 	}
@@ -33,6 +31,9 @@ const RecipePreview = () => {
 	const fetchUserWishlists = async () => {
 		const username = store.getState().userAcc.accDetails.username;
 		const refreshToken = getRefreshToken();
+		if (!refreshToken) { // user is logged out
+			return [];
+		}
 		const response = await axios.get(serverApi + `users/${username}/wishlists`, {
 			headers: {
 				"authorization": `Bearer ${refreshToken}`
@@ -128,6 +129,11 @@ const RecipePreview = () => {
 							<li className="flex justify-start items-center gap-x-5">
 								<h2 className="font-bolder text-2xl ">Name:</h2>
 								<p className="">{details?.name}</p>
+							</li>
+
+							<li className="flex justify-start items-center gap-x-5">
+								<h2 className="font-bolder text-2xl ">upload date:</h2>
+								<p className="">{details?.createdAt?.split("T")[0]}</p>
 							</li>
 
 							<li className="flex justify-start my-4 items-baseline gap-x-5">

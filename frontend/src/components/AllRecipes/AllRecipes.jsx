@@ -13,7 +13,7 @@ import axios from 'axios';
 import { serverApi } from '../../CONSTANTS';
 
 const AllRecipes = () => {
-    const [filter, setFilter] = useState("sort-by-date/ascending");
+    const [filter, setFilter] = useState("sort-by-date/descending");
     const [recipes, setRecipes] = useState([]);
 
 
@@ -68,12 +68,12 @@ const AllRecipes = () => {
     return (
         <div className='w-full h-screen'>
             <div className='w-full h-12 flex justify-end pr-2 lg:pr-12 mt-2'>
-                <select defaultValue={"sort-by-date/ascending"} onChange={handleFilter}
+                <select defaultValue={"sort-by-date/descending"} onChange={handleFilter}
                     className='outline-none bg-black text-white rounded px-4'>
-                    <option value={"sort-by-date/ascending"} >Most Recent</option>
-                    <option value={"sort-by-date/descending"}>Older</option>
-                    <option value={"sort-by-wishlists/ascending"}>Most Popular</option>
-                    <option value={"sort-by-wishlists/descending"}>Least Popular</option>
+                    <option value={"sort-by-date/descending"} >Most Recent</option>
+                    <option value={"sort-by-date/ascending"}>Older</option>
+                    <option value={"sort-by-wishlists/descending"}>Most Popular</option>
+                    <option value={"sort-by-wishlists/ascending"}>Least Popular</option>
                     <option value={"sort-by-name/ascending"}>A - Z</option>
                     <option value={"sort-by-name/descending"}>Z - A</option>
                 </select>
