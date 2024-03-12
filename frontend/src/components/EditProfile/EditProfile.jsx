@@ -124,6 +124,7 @@ const EditProfile = () => {
 			const user = Cookies.get("user");
 			const isOwn = username === user;
 			if (!isOwn) {
+				navigate(-1);
 				return;
 				//TODO : show here an error.
 			}

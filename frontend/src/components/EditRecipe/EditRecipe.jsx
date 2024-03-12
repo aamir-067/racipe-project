@@ -1,62 +1,201 @@
-import React, { useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import axios from "axios";
+import Cookies from "js-cookie";
+import React, { useEffect, useState } from "react";
+import { useDropzone } from "react-dropzone";
 import { IoImagesOutline } from "react-icons/io5";
+import { useNavigate, useParams } from "react-router-dom";
+import { serverApi } from "../../CONSTANTS";
+import { useForm } from "react-hook-form";
+import { getRefreshToken } from "../../utils/getRefreshToken";
+import Loading from "../Loading/Loading";
 
 const EditRecipe = () => {
-    const [selectedImage, setSelectedImage] = useState(null);
+	const [selectedImage, setSelectedImage] = useState([undefined, undefined]);
+	const [details, setDetails] = useState({});
+	const { recipeId } = useParams();
+	const navigate = useNavigate();
+	const [loading, setLoading] = useState(false);
+	const { handleSubmit, register } = useForm();
 
-    const onDrop = (acceptedFiles) => {
-        // Assuming user is only selecting one file
-        const imageFile = acceptedFiles[0];
-        const imageUrl = URL.createObjectURL(imageFile);
-        setSelectedImage(imageUrl);
-    };
+	const getRecipeDetails = async () => {
+		setLoading(true);
+		try {
+			const response = await axios.get(
+				serverApi + `recipes/preview/${recipeId}`
+			);
+			// check if the recipe is belongs to the current logged in user.
+			const { data } = await axios.get(
+				serverApi + `users/p/${Cookies.get("user")}`
+			);
+			const { uploadedRecipes } = data.data.account;
+			const isOwn = uploadedRecipes?.some((recipe) => {
+				return recipe._id === recipeId;
+			});
+			if (!isOwn) {
+				navigate(-1);
+				return;
+				//TODO : show an error
+			}
+			setDetails(response.data.data.recipe);
+		} catch (error) {
+			console.log(error);
+			// TODO : show en error here.
+		}
+		setLoading(false);
+	};
 
-    const { getRootProps, getInputProps } = useDropzone({
-        accept: 'image/*',
-        onDrop,
-    });
+	const handleCoverImage = (e) => {
+		e.target.files?.length &&
+			setSelectedImage([
+				URL.createObjectURL(e.target.files[0]),
+				e.target.files[0],
+			]);
+	};
 
-    return (
-        <div className='flex flex-col -pt-5 md:pt-8 lg:pt-10 md:flex-row lg:flex-row px-2 lg:px-9 md:w-full lg:w-full h-screen gap-2 md:gap-0 lg:gap-2 overflow-hidden bg-slate-300'>
+	const updateRecipeDetails = async ({ name, description, ingredients }) => {
+		const refreshToken = getRefreshToken();
+		if (!refreshToken) {
+			return;
+			//TODO : show an errors
+		}
+		setLoading(true);
+		try {
+			// check if the coverImage is updated.
+			if (selectedImage[1]) {
+				await axios.patch(
+					serverApi + `recipes/edit-recipe/${recipeId}/cover-image`,
+					{
+						coverImage: selectedImage[1],
+					},
+					{
+						headers: {
+							Authorization: "Bearer " + refreshToken,
+							"Content-Type": "multipart/form-data",
+						},
+					}
+				);
+			}
+			// check if the recipe name is updated.
+			if (name?.trim()) {
+				await axios.patch(
+					serverApi + `recipes/edit-recipe/${recipeId}/name`,
+					{
+						name,
+					},
+					{
+						headers: {
+							Authorization: "Bearer " + refreshToken,
+						},
+					}
+				);
+			}
 
-            {/* image selector */}
-            <div
-                {...getRootProps()}
-                className='mx-auto my-0 md:mx-0 md:my-0 lg:mx-0 lg:my-0 flex justify-center items-center w-80 -mt-5 mb-4 md:mb-0 lg:mb-0 lg:w-full md:w-full md:h-1/4 lg:h-1/2 h-1/3 relative top-12 text-white border-black border-2 border-dashed rounded-lg '
-            >
-                <input {...getInputProps()} />
-                {selectedImage ? (
-                    <img src={selectedImage} alt="Selected" className="rounded-full w-40 h-40" />
-                ) : (
-                    <div className='flex flex-col justify-center items-center gap-4 md:gap-8 lg:gap-8'>
-                        <IoImagesOutline className='text-black w-16 h-16 hover:text-blue-700' />
-                        <p className='text-black'>Drag Your Image or Click to import</p>
-                    </div>
+			// check if the recipe ingredients is updated.
+			if (ingredients) {
+				await axios.patch(
+					serverApi + `recipes/edit-recipe/${recipeId}/ingredients`,
+					{
+						ingredients,
+					},
+					{
+						headers: {
+							Authorization: "Bearer " + refreshToken,
+						},
+					}
+				);
+			}
+			// check if the recipe description is updated.
+			if (description) {
+				await axios.patch(
+					serverApi + `recipes/edit-recipe/${recipeId}/description`,
+					{
+						description,
+					},
+					{
+						headers: {
+							Authorization: "Bearer " + refreshToken,
+						},
+					}
+				);
+			}
+		} catch (error) {
+			console.log(error);
+			// TODO : show en error here.
+		}
+		setLoading(false);
+		navigate(-1);
+	};
 
+	useEffect(() => {
+		getRecipeDetails();
+	}, []);
 
-                )}
-            </div>
+	return loading ? (
+		<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+			<Loading />
+		</div>
+	) : (
+		<div className="flex flex-col -pt-5 md:pt-8 lg:pt-10 md:flex-row lg:flex-row px-2 lg:px-9 md:w-full lg:w-full h-screen gap-2 md:gap-0 lg:gap-2 overflow-hidden bg-slate-300">
+			{/* image selector */}
+			<div className="mx-auto my-0 flex justify-center items-center w-80 -mt-5 mb-4 md:mb-0 lg:mb-0 lg:w-full md:w-full md:h-1/4 lg:h-1/2 h-1/3 relative top-12 text-white rounded">
+				<div className="bg-black duration-200 ease-in-out w-full h-2/5 z-10 absolute bottom-0 opacity-0 hover:opacity-100">
+					<input
+						onChange={handleCoverImage}
+						type="file"
+						accept="image/*"
+						className="cursor-pointer absolute w-full h-full opacity-0"
+					/>
+					<p className="text-center my-3 opacity-100 text-lg font-myBold6">
+						Select Image
+					</p>
+				</div>
+				<img
+					src={
+						selectedImage[0]
+							? selectedImage[0]
+							: details?.coverImage
+					}
+					alt=""
+					className="w-full h-full object-cover"
+				/>
+			</div>
 
+			{/* Recipe Form */}
+			<div className="w-96 mt-6 md:w-full lg:w-full mx-auto my-0 md:mx-0 md:my-0 lg:mx-0 lg:my-0">
+				{/* Your recipe form components go here */}
+				<form
+					onSubmit={handleSubmit(updateRecipeDetails)}
+					className="flex flex-col gap-2 mg:gap-4 lg:gap-4 items-center relative top-8 mx-auto my-0 md:mx-0 md:my-0 lg:mx-0 lg:my-0"
+				>
+					<input
+						type="text"
+						{...register("name", {})}
+						placeholder="name"
+						defaultValue={details?.name}
+						className="w-8/12 rounded border-gray-200 outline-none px-4 py-2 shadow-sm sm:text-sm"
+					/>
+					<input
+						type="text"
+						{...register("ingredients")}
+						placeholder="ingredients"
+						defaultValue={details?.ingredients?.join(", ")}
+						className="w-8/12 rounded border-gray-200 outline-none px-4 py-2 shadow-sm sm:text-sm"
+					/>
+					<textarea
+						className="w-8/12 px-4 py-2 outline-none resize-none border-none align-top focus:ring-0 sm:text-sm"
+						rows="4"
+						{...register("description")}
+						placeholder="description"
+						defaultValue={details?.description}
+					/>
 
-            {/* Recipe Form */}
-            <div className='w-96 mt-6 md:w-full lg:w-full mx-auto my-0 md:mx-0 md:my-0 lg:mx-0 lg:my-0'>
+					<button className="bg-black text-white hover:bg-opacity-90 p-2 rounded w-1/4">
+						update
+					</button>
+				</form>
+			</div>
+		</div>
+	);
+};
 
-                {/* Your recipe form components go here */}
-                <form className=" flex flex-col gap-2 mg:gap-4 lg:gap-4 items-center relative top-8 mx-auto my-0 md:mx-0 md:my-0 lg:mx-0 lg:my-0">
-                    <input type="text" placeholder='Racipe Name' className='outline-none p-2 rounded shadow-sm shadow-black w-80 md:w-1/2 lg:w-1/2' />
-                    <input type="text" placeholder='Tags' className='outline-none p-2 rounded shadow-sm shadow-black w-80 md:w-1/2 lg:w-1/2' />
-                    <input type="text" placeholder='Ingredient' className='outline-none p-2 rounded shadow-sm shadow-black w-80 md:w-1/2 lg:w-1/2' />
-                    <textarea name="" id="" cols="25" rows="5"
-                        placeholder='Description'
-                        className='p-3 outline-none shadow-sm shadow-black rounded w-80 md:w-1/2 lg:w-1/2'>
-                    </textarea>
-
-                    <button className='bg-black text-white hover:bg-opacity-90 p-2 rounded w-1/4'>Upload</button>
-                </form>
-            </div>
-        </div>
-    );
-}
-
-export default EditRecipe
+export default EditRecipe;

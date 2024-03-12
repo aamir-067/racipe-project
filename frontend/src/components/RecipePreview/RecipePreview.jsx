@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import wishListBadgeShallow from "../../assets/emptyWishList.png";
 import wishListBadgeFill from "../../assets/filledWishlist.png";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import axios from "axios";
 import { serverApi } from "../../CONSTANTS";
 import { store } from "../../app/store";
 import { getRefreshToken } from "../../utils/getRefreshToken";
 import { updateData } from "../../features/userAcc.reducer";
 import Loading from "../Loading/Loading";
+import Cookies from "js-cookie";
 
 const RecipePreview = () => {
 	const { recipeId } = useParams();
@@ -78,13 +79,16 @@ const RecipePreview = () => {
 				serverApi + `recipes/preview/${recipeId}`
 			);
 			await isAlreadyWishlist(response.data.data.recipe._id);
-
 			// check if the recipe is belongs to the current logged in user.
-			const { uploadedRecipes } = store.getState().userAcc;
-			const isOwnerRecipe = uploadedRecipes.some(recipe => {
-				return recipe?._id === details?._id ? true : false;
-			})
-			setOwnerRecipe(isOwnerRecipe);
+			const { data } = await axios.get(serverApi + `users/p/${Cookies.get("user")}`);
+			const { uploadedRecipes } = data.data.account;
+			uploadedRecipes?.map((recipe => {
+				if (recipe._id === recipeId) {
+					setOwnerRecipe(true);
+					console.log(true);
+				}
+			}))
+			console.log(uploadedRecipes);
 			setDetails(response.data.data.recipe);
 
 		} catch (error) {
@@ -119,10 +123,12 @@ const RecipePreview = () => {
 								<p className="text-xl px-1 font-myBold6">{details?.wishlistsCount}</p>
 							</div>
 
-							<div className={`flex justify-center gap-x-2 items-center ${ownerRecipe ? "opacity-100" : "opacity-0"}`}>
-								<button className="rounded bg-black text-white w-32 p-3 hover:bg-opacity-90">edit</button>
-								<button className="rounded bg-black text-white w-32 p-3 hover:bg-opacity-90">delete</button>
-							</div>
+							{
+								ownerRecipe && <div className={`flex justify-center gap-x-2 items-center`}>
+									<NavLink to={`/recipe/${recipeId}/edit`} className="rounded text-center bg-blue-400 text-white font-bold px-4 py-3 hover:bg-opacity-90">Edit</NavLink>
+									<button className="rounded text-center bg-red-600 text-white font-bold px-4 py-3 hover:bg-opacity-90">Delete</button>
+								</div>
+							}
 						</div>
 						{/* Your recipe form components go here */}
 						<ul className=" mt-10 mx-4">
