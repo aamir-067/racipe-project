@@ -80,9 +80,8 @@ const ProfilePreview = () => {
 	return (
 		<>
 			<div
-				className={`flex w-full box-border bg-white ${
-					details.length ? "hidden" : ""
-				}`}
+				className={`flex w-full box-border bg-white ${details.length ? "hidden" : ""
+					}`}
 			>
 				<div
 					className="hidden w-1/2 lg:flex flex-col "
@@ -116,9 +115,9 @@ const ProfilePreview = () => {
 						</li>
 
 						{username == loggedInUser && (
-							<button className="rounded bg-black text-white w-32 justify-center h-10 p-3 flex items-center hover:bg-opacity-90 mt-5 mx-auto my-0 shadow-inner shadow-gray-500">
+							<NavLink to={"edit"} className="rounded bg-black text-white w-32 justify-center h-10 p-3 flex items-center hover:bg-opacity-90 mt-5 mx-auto my-0 shadow-inner shadow-gray-500">
 								Edit Profile
-							</button>
+							</NavLink>
 						)}
 					</ul>
 				</div>
@@ -155,9 +154,8 @@ const ProfilePreview = () => {
 
 			{/* Loading */}
 			<div
-				className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${
-					details.length ? "" : "hidden"
-				}`}
+				className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${details.length ? "" : "hidden"
+					}`}
 			>
 				<Loading />
 			</div>

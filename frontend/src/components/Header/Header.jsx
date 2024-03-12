@@ -64,7 +64,7 @@ const Header = () => {
                     <div className='absolute bottom-5 left-0 h-4 gap-4 w-full flex justify-center items-center'>
                         {
                             topFiveRecipes.map((item, index) =>
-                                <span onClick={() => setCurrentImg(index)} className={`h-4 w-4 cursor-pointer rounded-full ${currentImg === index ? "bg-gray-900" : "bg-gray-300"}`}></span>
+                                <span key={index} onClick={() => setCurrentImg(index)} className={`h-4 w-4 cursor-pointer rounded-full ${currentImg === index ? "bg-gray-900" : "bg-gray-300"}`}></span>
                             )
                         }
                     </div>
@@ -80,7 +80,7 @@ const Header = () => {
                         {
                             topFiveRecipes?.map((recipe, index) => {
                                 return (
-                                    <NavLink to={`/recipe/${recipe._id}/preview`} className='my-4 mx-2 md:w-3/12 w-6/12 lg:w-2/12'>
+                                    <NavLink key={index} to={`/recipe/${recipe._id}/preview`} className='my-4 mx-2 md:w-3/12 w-6/12 lg:w-2/12'>
                                         <RecipeCard details={recipe} />
                                     </NavLink>
                                 )
