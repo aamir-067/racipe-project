@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { IoImagesOutline } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
@@ -12,6 +12,9 @@ import Loading from "../Loading/Loading";
 const EditRecipe = () => {
 	const [selectedImage, setSelectedImage] = useState([undefined, undefined]);
 	const [details, setDetails] = useState({});
+	const nameRef = useRef(null);
+	const descriptionRef = useRef(null);
+	const ingredientsRef = useRef(null);
 	const { recipeId } = useParams();
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
@@ -36,6 +39,7 @@ const EditRecipe = () => {
 				return;
 				//TODO : show an error
 			}
+			console.log(response.data.data.recipe);
 			setDetails(response.data.data.recipe);
 		} catch (error) {
 			console.log(error);
@@ -52,7 +56,10 @@ const EditRecipe = () => {
 			]);
 	};
 
-	const updateRecipeDetails = async ({ name, description, ingredients }) => {
+	const updateRecipeDetails = async () => {
+		const name = nameRef?.current?.value;
+		const description = descriptionRef?.current?.value;
+		const ingredients = ingredientsRef?.current?.value;
 		const refreshToken = getRefreshToken();
 		if (!refreshToken) {
 			return;
@@ -162,31 +169,29 @@ const EditRecipe = () => {
 
 			{/* Recipe Form */}
 			<div className="w-96 mt-6 md:w-full lg:w-full mx-auto my-0 md:mx-0 md:my-0 lg:mx-0 lg:my-0">
-				{/* Your recipe form components go here */}
 				<form
-					onSubmit={handleSubmit(updateRecipeDetails)}
+					onSubmit={updateRecipeDetails}
 					className="flex flex-col gap-2 mg:gap-4 lg:gap-4 items-center relative top-8 mx-auto my-0 md:mx-0 md:my-0 lg:mx-0 lg:my-0"
 				>
 					<input
-						type="text"
-						{...register("name", {})}
+						defaultValue={details.name}
+						ref={nameRef}
 						placeholder="name"
-						defaultValue={details?.name}
-						className="w-8/12 rounded border-gray-200 outline-none px-4 py-2 shadow-sm sm:text-sm"
+						className="w-10/12 rounded outline-none px-4 py-2"
 					/>
 					<input
 						type="text"
-						{...register("ingredients")}
+						defaultValue={details.ingredients?.join(", ")}
+						ref={ingredientsRef}
 						placeholder="ingredients"
-						defaultValue={details?.ingredients?.join(", ")}
-						className="w-8/12 rounded border-gray-200 outline-none px-4 py-2 shadow-sm sm:text-sm"
+						className="w-10/12 rounded outline-none px-4 py-2"
 					/>
 					<textarea
-						className="w-8/12 px-4 py-2 outline-none resize-none border-none align-top focus:ring-0 sm:text-sm"
+						className="w-10/12 px-4 py-2 outline-none resize-none rounded align-top"
 						rows="4"
-						{...register("description")}
+						defaultValue={details.description}
+						ref={descriptionRef}
 						placeholder="description"
-						defaultValue={details?.description}
 					/>
 
 					<button className="bg-black text-white hover:bg-opacity-90 p-2 rounded w-1/4">

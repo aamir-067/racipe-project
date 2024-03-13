@@ -23,9 +23,6 @@ const RecipePreview = () => {
 			return recipe?._id == _id ? true : false;
 		})
 
-
-		// console.log(isWishListed ? "use already wishlist this recipe" : "user not wishlist this recipe");
-
 		setIsWishlist(isWishListed);
 	}
 
@@ -85,10 +82,8 @@ const RecipePreview = () => {
 			uploadedRecipes?.map((recipe => {
 				if (recipe._id === recipeId) {
 					setOwnerRecipe(true);
-					console.log(true);
 				}
 			}))
-			console.log(uploadedRecipes);
 			setDetails(response.data.data.recipe);
 
 		} catch (error) {
