@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import wishListBadgeShallow from "../../assets/emptyWishList.png";
 import wishListBadgeFill from "../../assets/filledWishlist.png";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { serverApi } from "../../CONSTANTS";
 import { store } from "../../app/store";
@@ -11,11 +11,12 @@ import Loading from "../Loading/Loading";
 import Cookies from "js-cookie";
 
 const RecipePreview = () => {
+	const [loading, setLoading] = useState(false);
 	const { recipeId } = useParams();
 	const [details, setDetails] = useState(null);
 	const [ownerRecipe, setOwnerRecipe] = useState(false);
 	const [isWishlist, setIsWishlist] = useState(false);
-
+	const navigate = useNavigate();
 	const isAlreadyWishlist = async (_id = "") => {
 		const wishListedRecipes = await fetchUserWishlists();
 
@@ -92,6 +93,29 @@ const RecipePreview = () => {
 		}
 	}
 
+
+	const deleteRecipe = async () => {
+		setLoading(true);
+		const refreshToken = getRefreshToken();
+		if (!refreshToken) {
+			alert("Please login first!");
+			return;
+		}
+		try {
+			await axios.delete(serverApi + `recipes/delete/${recipeId}`, {
+				headers: {
+					"authorization": `Bearer ${refreshToken}`
+				}
+			});
+			navigate(-1);
+		} catch (error) {
+			console.log(error);
+			// TODO : show en error here.
+		}
+
+		setLoading(false);
+	}
+
 	useEffect(() => {
 		getRecipeDetails()
 	}, []);
@@ -121,7 +145,7 @@ const RecipePreview = () => {
 							{
 								ownerRecipe && <div className={`flex justify-center gap-x-2 items-center`}>
 									<NavLink to={`/recipe/${recipeId}/edit`} className="rounded text-center bg-blue-400 text-white font-bold px-4 py-3 hover:bg-opacity-90">Edit</NavLink>
-									<button className="rounded text-center bg-red-600 text-white font-bold px-4 py-3 hover:bg-opacity-90">Delete</button>
+									<button onClick={deleteRecipe} className="rounded text-center bg-red-600 text-white font-bold px-4 py-3 hover:bg-opacity-90">Delete</button>
 								</div>
 							}
 						</div>
@@ -162,7 +186,7 @@ const RecipePreview = () => {
 			</div>
 
 			<div
-				className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${details === null ? "" : "hidden"
+				className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${(details || loading) === null ? "" : "hidden"
 					}`}
 			>
 				<Loading />

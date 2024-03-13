@@ -30,7 +30,7 @@ router.route("/upload").post(
 )
 
 
-router.route("/delete-recipe").delete(verifyToken, deleteUploadedRecipe);
+router.route("/delete/:recipeId").delete(verifyToken, deleteUploadedRecipe);
 
 router.route("/add-to-wishlist").post(verifyToken, addToWishlist);
 

@@ -139,7 +139,7 @@ export const deleteFromWishlist = asyncHandler(async (req, res) => {
 
 export const deleteUploadedRecipe = asyncHandler(async (req, res) => {
     const { _id } = req?.user;
-    const { recipeId } = req.body;
+    const { recipeId } = req.params;
 
     if (!recipeId) {
         throw new Error("Invalid Recipe ID");
