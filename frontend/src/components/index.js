@@ -12,11 +12,12 @@ import Registration from "./Registration/Registration"
 import Footer from './Footer/Footer'
 import ErrorPopUp from "./PopUps/ErrorPopUp";
 import UploadRecipe from "./UploadRecipe/UploadRecipe";
-
+import Error from "./404/404";
 // Export each component without the default keyword
 export {
   NavBar,
   Header,
+  Error,
   EditProfile,
   EditRecipe,
   AllRecipes,
