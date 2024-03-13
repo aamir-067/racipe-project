@@ -11,6 +11,8 @@ import Login from "./Login/Login"
 import Registration from "./Registration/Registration"
 import Footer from './Footer/Footer'
 import ErrorPopUp from "./PopUps/ErrorPopUp";
+import UploadRecipe from "./UploadRecipe/UploadRecipe";
+
 // Export each component without the default keyword
 export {
   NavBar,
@@ -23,6 +25,7 @@ export {
   RecipePreview,
   Login,
   Registration,
+  UploadRecipe,
   Footer,
   ErrorPopUp
 };

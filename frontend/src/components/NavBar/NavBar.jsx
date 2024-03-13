@@ -84,7 +84,7 @@ const NavBar = () => {
 
     const { userAcc: { isLogin } } = store.getState(state => state);
     useEffect(() => {
-        isLogin ? setIsLoggedIn(true) : setIsLoggedIn(false);
+        Cookies.get("user") && setIsLoggedIn(true);
         let username = store.getState(prev => prev)?.userAcc?.accDetails?.username;
         setUser(username ? username : "");
     }, [isLogin]);

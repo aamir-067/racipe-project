@@ -1,6 +1,6 @@
 import { Route, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
 import App from "../App.jsx";
-import { Registration, Header, Login, RecipePreview, ProfilePreview, EditProfile, EditRecipe, AllRecipes } from "../components/index.js";
+import { Registration, Header, Login, RecipePreview, ProfilePreview, UploadRecipe, EditProfile, EditRecipe, AllRecipes } from "../components/index.js";
 export const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/" element={<App />}>
@@ -17,6 +17,7 @@ export const router = createBrowserRouter(
             <Route path="/search/:searchQuery/result" element={<AllRecipes />} />
             <Route path="/recipe/:recipeId/preview" element={<RecipePreview />} />
             <Route path="/recipe/:recipeId/edit" element={<EditRecipe />} />
+            <Route path="/recipe/new/upload" element={<UploadRecipe />} />
 
         </Route>
     )

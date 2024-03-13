@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import img1 from "../../assets/img1.jpg";
 import RecipeCard from "../RecipeCard/RecipeCard";
 import { NavLink, useParams } from "react-router-dom";
 import { store } from "../../app/store";
@@ -80,13 +78,11 @@ const ProfilePreview = () => {
 	return (
 		<>
 			<div
-				className={`flex w-full box-border bg-white ${details.length ? "hidden" : ""
-					}`}
+				className={`flex w-full box-border bg-white ${
+					details.length ? "hidden" : ""
+				}`}
 			>
-				<div
-					className="hidden w-1/2 lg:flex flex-col "
-					style={{ height: "90vh" }}
-				>
+				<div className="hidden w-4/12 lg:flex flex-col min-h-screen">
 					<div className="mx-auto mt-6">
 						<img
 							src={details?.accDetails?.avatar}
@@ -115,13 +111,18 @@ const ProfilePreview = () => {
 						</li>
 
 						{username == loggedInUser && (
-							<NavLink to={"edit"} className="rounded bg-black text-white w-32 justify-center h-10 p-3 flex items-center hover:bg-opacity-90 mt-5 mx-auto my-0 shadow-inner shadow-gray-500">
+							<NavLink
+								to={"edit"}
+								className="rounded bg-black text-white w-32 justify-center h-10 p-3 flex items-center hover:bg-opacity-90 mt-5 mx-auto my-0 shadow-inner shadow-gray-500"
+							>
 								Edit Profile
 							</NavLink>
 						)}
 					</ul>
 				</div>
-				<div className="w-full flex flex-col bg-gray-400">
+
+				{/* right section */}
+				<div className="w-full flex flex-col bg-gray-400 relative">
 					<div className="w-full h-12 my-4 relative mt-4 pr-2 ">
 						<select
 							defaultValue={"Uploaded"}
@@ -136,7 +137,7 @@ const ProfilePreview = () => {
 							</option>
 						</select>
 					</div>
-					<div className=" w-full flex justify-start items-center mx-2 gap-2 flex-wrap bg-gray-400 mb-40">
+					<div className=" w-full flex justify-start items-center flex-wrap mb-40">
 						{details[recipeToggle]?.map((item, index) => {
 							return (
 								<NavLink
@@ -144,18 +145,30 @@ const ProfilePreview = () => {
 									to={`/recipe/${item._id}/preview`}
 									key={index}
 								>
-									<RecipeCard details={item} />
+									<div className="m-2">
+										<RecipeCard details={item} />
+									</div>
 								</NavLink>
 							);
 						})}
 					</div>
+
+					{username == loggedInUser && (
+						<NavLink
+							to={"/recipe/new/upload"}
+							className="p-6 rounded-full bg-black text-white font-myBold7 text-lg absolute z-10 bottom-28 right-9"
+						>
+							Upload
+						</NavLink>
+					)}
 				</div>
 			</div>
 
 			{/* Loading */}
 			<div
-				className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${details.length ? "" : "hidden"
-					}`}
+				className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${
+					details.length ? "" : "hidden"
+				}`}
 			>
 				<Loading />
 			</div>
