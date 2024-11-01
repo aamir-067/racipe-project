@@ -39,9 +39,6 @@ const Header = () => {
 
     useEffect(() => {
         getTopRecipes();
-        setInterval(() => {
-        }, 1000);
-
     }, [])
 
     return (

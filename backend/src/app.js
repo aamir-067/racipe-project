@@ -12,10 +12,7 @@ app.use(express.urlencoded({ limit: "200kb", extended: true }));  // to get the 
 app.use(express.static('public'));   // to handle file in public folder
 
 
-app.use(cors({
-    whitelist: process.env.CORS_ORIGIN,
-    credentials: true
-}));
+app.use(cors());
 
 app.use(cookieParser());
 
